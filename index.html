@@ -478,7 +478,7 @@
     <button class="chapter-btn active" onclick="showChapter(1, this)">I. Bölüm</button>
     <button class="chapter-btn" onclick="showChapter(2, this)">II. Bölüm</button>
     <button class="chapter-btn" onclick="showChapter(3, this)">III. Bölüm</button>
-    <button class="chapter-btn locked" onclick="return false" title="Yakında">IV. Bölüm</button>
+    <button class="chapter-btn" onclick="showChapter(4, this)">IV. Bölüm</button>
     <button class="chapter-btn locked" onclick="return false" title="Yakında">V. Bölüm</button>
   </div>
 </nav>
@@ -911,10 +911,167 @@
 
       <div class="chapter-end">
         <div class="chapter-end-ornament">— ✦ —</div>
-        <button class="next-chapter-btn" onclick="alert('IV. Bölüm yakında!')">
+        <button class="next-chapter-btn" onclick="showChapter(4, document.querySelectorAll('.chapter-btn')[3])">
           IV. Bölüme Geç →
         </button>
-        <p class="coming-soon">IV. Bölüm: <em>"Hipotez"</em> — Voss şüphelisini buluyor; ama kanıtlamak için hipotez testi gerekiyor</p>
+      </div>
+
+    </article>
+  </section>
+
+
+  <!-- ════ BÖLÜM IV ════ -->
+  <section class="chapter" id="chapter-4">
+    <article class="book-page">
+
+      <header class="chapter-header">
+        <div class="chapter-number">Dördüncü Bölüm</div>
+        <h2 class="chapter-title">Hipotez</h2>
+        <p class="chapter-epigraph">
+          "Bir şüpheliyi bulmak kolaydır.<br>
+          Haklı olduğunuzu kanıtlamak ise bambaşka bir bilimdir."
+          <cite>— Edmund Voss, Kişisel Notlar, 1903</cite>
+        </p>
+      </header>
+
+      <div class="story">
+
+        <p>Ölüm belgelerini Calloway getirmişti — iki adet, sarı zarflı, resmi mühürlü. Voss zarfları açmadan önce bir an tuttu elinde. Her belge bir hayatın son cümlesi gibiydi; bunlara acele davranmak doğru gelmemişti hiçbir zaman. Sonra açtı.</p>
+
+        <p>George Alderton, 62. Ölüm sebebi: miyokard enfarktüsü. İmzalayan doktor: <strong>Dr. Silas Pemberton.</strong></p>
+
+        <p>William Crane, 65. Ölüm sebebi: kardiyak yetmezlik. İmzalayan doktor: <strong>Dr. Silas Pemberton.</strong></p>
+
+        <p>Voss belgeleri yan yana koydu ve uzaklaşarak baktı. İki farklı adam, iki farklı adres, iki farklı tarih. Ama aynı doktor. Ve Thames Life & Assurance'ın 1903 primlerini imzalayan isim — Calloway'in bir gün önce getirdiği kayda göre — yine aynıydı: <strong>Silas Pemberton.</strong> Şirketin tıbbi danışmanıydı.</p>
+
+        <div class="clue-card">
+          <p>Calloway'in notu, 8 Kasım 1903:<br><br>
+          "Dr. Silas Pemberton — Thames Life tıbbi danışmanı, 1899'dan beri.<br>
+          Alderton poliçesi: Pemberton imzası.<br>
+          Crane poliçesi: Pemberton imzası.<br>
+          Fenwick'in son haftasında görüştüğü kişiler listesi: Pemberton adı geçiyor,<br>
+          4 Kasım Çarşamba, öğleden sonra. Fenwick iki gün sonra ölmüş."</p>
+        </div>
+
+        <p>Odada sessizlik çöktü. Calloway iskemlesinde öne eğilmişti, dirsekleri dizlerinde. Voss hâlâ belgelere bakıyordu.</p>
+
+        <div class="dialogue">
+          <div class="speaker">Calloway</div>
+          <p>"Bu yeterli değil mi? Aynı adam, üç ölüm, üç imza."</p>
+        </div>
+
+        <div class="dialogue">
+          <div class="speaker">Voss</div>
+          <p>"Yeterli mi? Calloway, bu bir korelasyon. Pembert'on her üç vakada da mevcut — ama bu onun suçlu olduğunu kanıtlamaz. Londra'nın tıbbi danışmanları sınırlı sayıda. Belki de sadece popüler biri."</p>
+        </div>
+
+        <div class="dialogue">
+          <div class="speaker">Calloway</div>
+          <p>"İçinizden de şüpheleniyorsunuz."</p>
+        </div>
+
+        <div class="dialogue">
+          <div class="speaker">Voss</div>
+          <p>"Evet. Ama şüphe ile kanıt arasındaki mesafeyi istatistik ölçer. Bana Pemberton'ın imzaladığı tüm ölüm belgelerini getirin — 1899'dan bu yana. Sayılar konuşacak."</p>
+        </div>
+
+        <div class="concept-box" data-label="İstatistik Kavramı">
+          <h4>Hipotez Testi — Şüpheyi Sayıya Dökmek</h4>
+          <p>Voss o gece masasına oturdu ve bir istatistikçinin en güçlü silahını kurdu: <strong>hipotez testi.</strong></p>
+          <p>Fikir basittir: önce "hiçbir şey olmadığını" varsayarsınız — buna <strong>sıfır hipotezi (H₀)</strong> denir. Sonra verinizin bu varsayımla ne kadar çeliştiğini ölçersiniz.</p>
+          <span class="concept-formula">H₀: Pemberton'ın vakalarındaki erken ölüm oranı, diğer doktorlardan farklı değildir.</span>
+          <span class="concept-formula">H₁: Pemberton'ın vakalarında erken ölüm oranı anlamlı biçimde yüksektir.</span>
+          <p>Eğer veri H₀'ı çürütecek kadar güçlüyse — yani gözlemlenen örüntünün rastlantıyla açıklanma ihtimali çok küçükse — H₀ reddedilir. Buna <strong>istatistiksel anlamlılık</strong> denir.</p>
+          <p><em>Mahkeme "makul şüphenin ötesinde" kanıt ister. İstatistik ise bunu sayıyla ifade eder.</em></p>
+        </div>
+
+        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+        <p>Calloway kayıtları iki günde getirdi. Pemberton 1899'dan bu yana Thames Life için kırk üç poliçe onaylamıştı. Voss bunları tek tek inceledi; her poliçenin yanına ödeme tarihini, müşterinin yaşını ve poliçe imza tarihini yazdı. Gece geç vakta, mum ışığında, tablo tamamlandı.</p>
+
+        <p>Kırk üç vakadan sekizi "erken ödeme" içeriyordu — yani müşteri poliçeyi imzaladıktan altı ay içinde ölmüştü. Londra genelinde bu oran binde ikiydi. Pemberton'ın vakalarında ise —</p>
+
+        <span class="concept-formula" style="display:block; text-align:center; margin: 1rem 2rem;">8 / 43 ≈ %18.6</span>
+
+        <p>Yüzde on sekiz. Beklenenin doksan katı.</p>
+
+        <div class="concept-box" data-label="İstatistik Kavramı">
+          <h4>p-Değeri — "Bu Tesadüf Olabilir mi?"</h4>
+          <p>Voss hesaplarını kontrol etti, sonra bir kez daha kontrol etti. Bulduğu şeyi <strong>p-değeri</strong> olarak ifade etti — gözlemlenen örüntünün, eğer H₀ doğruysa, salt rastlantıyla ortaya çıkma olasılığı.</p>
+          <p>p-değeri küçüldükçe, verimiz sıfır hipoteziyle daha çok çelişir. Bilimde genel eşik şöyledir:</p>
+          <span class="concept-formula">p &lt; 0.05 → istatistiksel olarak anlamlı</span>
+          <span class="concept-formula">p &lt; 0.01 → güçlü kanıt</span>
+          <span class="concept-formula">p &lt; 0.001 → çok güçlü kanıt</span>
+          <p>Voss'un hesabına göre Pemberton'ın oranı için p-değeri 0.000003'ün altındaydı. Yani bu örüntünün tesadüfen oluşma ihtimali milyonda üçten azdı.</p>
+          <p><em>İstatistik "suçlu" demez. Ama "bu tesadüf değildir" der — ve bazen bu yeterlidir.</em></p>
+        </div>
+
+        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+        <p>Sabah yedide Calloway'i uyandırdı. Kapı zili sesiyle gözlerini açan müfettiş, Voss'u eşiğinde görünce şaşırdı — adam üç günlük sakal bırakmış, gözlerinin altında halkalar oluşmuştu ama yüzünde tuhaf, sakin bir ifade vardı.</p>
+
+        <div class="dialogue">
+          <div class="speaker">Voss</div>
+          <p>"Pemberton'ı gözaltına alın."</p>
+        </div>
+
+        <div class="dialogue">
+          <div class="speaker">Calloway</div>
+          <p>"Rakamlar mı söylüyor bunu?"</p>
+        </div>
+
+        <div class="dialogue">
+          <div class="speaker">Voss</div>
+          <p>"Rakamlar, bu örüntünün tesadüf olmadığını milyonda üç ihtimalle söylüyor. Geri kalan araştırmanızın işi. Ama araştırmak için önce durdurmak gerekir."</p>
+        </div>
+
+        <p>Calloway bir an düşündü. Sonra ceketini aldı.</p>
+
+        <div class="concept-box" data-label="İstatistik Kavramı">
+          <h4>Tip I ve Tip II Hata — Yanılmanın İki Yüzü</h4>
+          <p>Voss kapıda durdu. "Bir şey daha," dedi. "Yanılıyor da olabilirim."</p>
+          <p>Calloway döndü. "Ne?"</p>
+          <p>"Her hipotez testinde iki tür hata vardır. <strong>Tip I hata:</strong> masum birine suçlu demek — H₀ doğruyken reddetmek. <strong>Tip II hata:</strong> suçluyu serbest bırakmak — H₀ yanlışken reddetmemek."</p>
+          <span class="concept-formula">Tip I Hata (α): H₀ doğruyken reddetmek → "Masum kişiyi mahkûm etmek"</span>
+          <span class="concept-formula">Tip II Hata (β): H₀ yanlışken reddetmemek → "Suçluyu serbest bırakmak"</span>
+          <p>"p &lt; 0.000003 ile Pemberton'a Tip I hata yapma ihtimalim son derece düşük. Ama sıfır değil. Bu yüzden siz soruşturun — ben sadece nereye bakacağınızı söyledim."</p>
+          <p>Calloway dışarı çıkarken mırıldandı: <em>"Rakamlar bile kendinizi garantiye alıyor."</em></p>
+          <p>Voss gülümsedi. "Rakamlar asla tam garanti vermez. Ama en dürüst şahitlerdir."</p>
+        </div>
+
+        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+        <p>Dr. Silas Pemberton o öğleden sonra gözaltına alındı. Üzerinde Thames Life & Assurance'a ait bir dizi belge çıktı; Alderton ve Crane'in mirasçılarıyla yapılmış gizli bir anlaşmayı gösteren mektuplar. Yüksek primli poliçeler imzalanmış, erken ölüm sağlanmış, mirasçılar tazminatın bir kısmını Pemberton'a aktarmıştı. Fenwick bu düzeni fark etmiş; Pemberton'la yüzleşmeye gitmiş; bir daha dönmemişti.</p>
+
+        <p>Calloway mahkeme sürecini Voss'a aktardığında tek bir şey sordu: "Siz hiç yanılır mısınız?"</p>
+
+        <p>Voss pencereye döndü. Thames aynı renkteydi — gri, sabırlı, her şeyi bilen.</p>
+
+        <p>"Her zaman yanılabilirim," dedi. "Ama olasılık beni doğru yönde tutmak için var. Kesinlik bir lüks. Belirsizliği yönetmek ise bir bilim."</p>
+
+        <p>Masasına döndü. Yeni bir dosya bekliyordu.</p>
+
+        <p>Rakamlar her zaman bekliyordu.</p>
+
+      </div><!-- /story -->
+
+      <div class="concept-sidebar">
+        <div class="sidebar-title">Bu Bölümde Geçen Kavramlar</div>
+        <span class="concept-tag">Hipotez Testi</span>
+        <span class="concept-tag">H₀ Sıfır Hipotezi</span>
+        <span class="concept-tag">H₁ Alternatif Hipotez</span>
+        <span class="concept-tag">p-Değeri</span>
+        <span class="concept-tag">İstatistiksel Anlamlılık</span>
+        <span class="concept-tag">Tip I Hata</span>
+        <span class="concept-tag">Tip II Hata</span>
+      </div>
+
+      <div class="chapter-end">
+        <div class="chapter-end-ornament">— ✦ SON ✦ —</div>
+        <p class="coming-soon" style="font-size:1.05rem; margin-top:0.5rem;">
+          <em>Edmund Voss'un yeni vakası yakında...</em><br>
+          V. Bölüm: <em>"Regresyon"</em>
+        </p>
       </div>
 
     </article>
