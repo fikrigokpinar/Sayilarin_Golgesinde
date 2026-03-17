@@ -477,7 +477,7 @@
     <span class="nav-label">Bölümler:</span>
     <button class="chapter-btn active" onclick="showChapter(1, this)">I. Bölüm</button>
     <button class="chapter-btn" onclick="showChapter(2, this)">II. Bölüm</button>
-    <button class="chapter-btn locked" onclick="return false" title="Yakında">III. Bölüm</button>
+    <button class="chapter-btn" onclick="showChapter(3, this)">III. Bölüm</button>
     <button class="chapter-btn locked" onclick="return false" title="Yakında">IV. Bölüm</button>
     <button class="chapter-btn locked" onclick="return false" title="Yakında">V. Bölüm</button>
   </div>
@@ -773,10 +773,148 @@
 
       <div class="chapter-end">
         <div class="chapter-end-ornament">— ✦ —</div>
-        <button class="next-chapter-btn" onclick="alert('III. Bölüm yakında!')">
+        <button class="next-chapter-btn" onclick="showChapter(3, document.querySelectorAll('.chapter-btn')[2])">
           III. Bölüme Geç →
         </button>
-        <p class="coming-soon">III. Bölüm: <em>"Dağılmanın Ölçüsü"</em> — Varyans, Standart Sapma, Thames Life'ın gizli hesapları</p>
+      </div>
+
+    </article>
+  </section>
+
+
+  <!-- ════ BÖLÜM III ════ -->
+  <section class="chapter" id="chapter-3">
+    <article class="book-page">
+
+      <header class="chapter-header">
+        <div class="chapter-number">Üçüncü Bölüm</div>
+        <h2 class="chapter-title">Dağılmanın Ölçüsü</h2>
+        <p class="chapter-epigraph">
+          "Bir şeyin ne kadar değişken olduğunu bilmeden,<br>
+          onun hakkında hiçbir şey bilmiyorsunuz demektir."
+          <cite>— Edmund Voss, Kişisel Notlar, 1903</cite>
+        </p>
+      </header>
+
+      <div class="story">
+
+        <p>Thames Life &amp; Assurance'ın genel müdürlüğü, Cornhill Caddesi'nin köşesinde dikiliyordu — siyah granit cephesi, altın yaldızlı tabelası ve her sabah tam dokuzda açılan ağır meşe kapısıyla. Voss sabah sekiz buçukta oradaydı. Soğuktu; parmak uçları uyuşmuştu ama bunu fark etmiyordu. Elinde Fenwick'in deri kaplı defterinin bir kopyası vardı. Zihninde ise bir soru.</p>
+
+        <p>Şirketin arşiv memuru, Voss'u içeriye aldı — müfettiş Calloway'nin imzalı yazısı kapıları açmıştı. Bodrum kattaki arşiv odasında uzun tahta raflar boyunca poliçe dosyaları diziliydi. On yıllık kayıtlar. Binlerce isim. Voss tam olarak ne aradığını biliyordu: Thames Life'ın son beş yıldaki ödeme kayıtları.</p>
+
+        <div class="clue-card">
+          <p>Thames Life &amp; Assurance — 1898–1903 arası erken ödeme kayıtları:<br><br>
+          1898: 3 erken ödeme — ortalama gecikme: 4.2 ay<br>
+          1899: 2 erken ödeme — ortalama gecikme: 3.8 ay<br>
+          1900: 4 erken ödeme — ortalama gecikme: 5.1 ay<br>
+          1901: 2 erken ödeme — ortalama gecikme: 4.6 ay<br>
+          1902: 1 erken ödeme — ortalama gecikme: 4.9 ay<br>
+          1903: 2 erken ödeme — ortalama gecikme: <strong>0.3 ay</strong></p>
+        </div>
+
+        <p>Voss tabloyu üç kez okudu. Ortalamalar yıldan yıla değişiyordu — üç buçuk ay ile beş ay arasında. Normal bir dağılım. Ama 1903'teki rakam sanki sayfadan fırlıyordu: <em>0.3 ay.</em> On günden az. Alderton ve Crane, poliçelerini imzaladıktan neredeyse hemen sonra ölmüşlerdi.</p>
+
+        <p>Bu sadece farklı bir ortalama değildi. Bu, beş yıllık örüntünün tamamen dışındaydı.</p>
+
+        <div class="concept-box" data-label="İstatistik Kavramı">
+          <h4>Varyans ve Standart Sapma — Dağılmanın Dili</h4>
+          <p>Voss kâğıdını çıkardı. Ortalama tek başına yetmiyordu — <em>değerlerin ortalamadan ne kadar saptığını</em> da bilmek gerekiyordu. Buna <strong>varyans</strong> denir.</p>
+          <span class="concept-formula">s² = Σ(xᵢ − x̄)² / (n−1)</span>
+          <p>Beş yıllık gecikme sürelerinin ortalaması yaklaşık 4.5 aydı. Her yılın değeri bu ortalamaya oldukça yakındı — varyans düşüktü, dağılım dardı. Ama 1903'teki 0.3 ay bu tabloya girdiğinde varyans aniden patladı.</p>
+          <p>Pratikte varyansın karekökü daha kolay yorumlanır — buna <strong>standart sapma</strong> denir:</p>
+          <span class="concept-formula">s = √s²</span>
+          <p>Voss hesapladı: beş yıllık standart sapma yaklaşık 0.6 aydı. Yani "normal" bir değer 4.5 ± 0.6 ay arasında olurdu. 0.3 ay ise bu aralığın yedi standart sapma uzağındaydı.</p>
+          <p><em>Yedi standart sapma. İstatistikte bu bir mucize değil, bir sinyal demektir.</em></p>
+        </div>
+
+        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+        <p>Arşiv memuru kapıya yaslanmış, Voss'u izliyordu. Adam saatlerce orada oturmuş, hesap yapıyordu. Öğle vakti geldiğinde memur bir şeyler söylemek istedi ama Voss'un yüzündeki ifade onu durdurdu — o ifade, bir şeyin tam yerine oturduğu andaki ifadeydi.</p>
+
+        <p>Voss kalktı. Dosyaların üzerine son bir kez baktı, sonra dışarı çıktı. Merdivenleri çıkarken zihninde tek bir soru dönüyordu: bu kadar düşük bir sapma <em>nasıl</em> mümkündü? Hayat, doğası gereği düzensizdir. İnsanlar öngörülemeyen zamanlarda ölür. Ama Alderton ve Crane neredeyse terazi hassasiyetiyle, tam "gerektiği" anda ölmüşlerdi.</p>
+
+        <p>Tesadüf bu kadar hassas olamaz.</p>
+
+        <div class="concept-box" data-label="İstatistik Kavramı">
+          <h4>Normal Dağılım ve "Olağandışı" Nedir?</h4>
+          <p>Doğadaki pek çok değişken <strong>normal dağılım</strong> gösterir — çan eğrisi şeklinde, ortalamanın etrafında simetrik olarak yığılır. Sigorta ödemeleri de böyledir: çoğu ödeme ortalamaya yakın zamanlarda gerçekleşir, çok erken ya da çok geç ödemeler nadirdir.</p>
+          <p>Normal dağılımda şu kural geçerlidir:</p>
+          <span class="concept-formula">%68 → ortalama ± 1 standart sapma</span>
+          <span class="concept-formula">%95 → ortalama ± 2 standart sapma</span>
+          <span class="concept-formula">%99.7 → ortalama ± 3 standart sapma</span>
+          <p>Voss'un bulduğu değer 7 standart sapma uzaktaydı. Böyle bir olayın rastlantısal gerçekleşme olasılığı, milyarda birden küçüktür. İstatistik bunu "imkânsız" demez — ama "bu bir tesadüf değildir" der.</p>
+        </div>
+
+        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+        <p>Calloway onu öğleden sonra ofisinde bekliyordu. Voss masaya oturdu ve hesaplarını tek tek anlattı. Calloway dinledi — önce sabırsızca, sonra giderek daha dikkatli bir yüzle.</p>
+
+        <div class="dialogue">
+          <div class="speaker">Calloway</div>
+          <p>"Yani iki adamın ölüm zamanlaması olağandışı. Bu bize cinayeti kanıtlamıyor, Voss."</p>
+        </div>
+
+        <div class="dialogue">
+          <div class="speaker">Voss</div>
+          <p>"Hayır. Ama hangi soruyu sormamız gerektiğini söylüyor. Alderton ve Crane'in ortak noktası ne? Kim bu ölümlerden kazanç sağladı? Ve Fenwick neden tam bu noktada durdu?"</p>
+        </div>
+
+        <div class="dialogue">
+          <div class="speaker">Calloway</div>
+          <p>"Thames Life, her iki poliçeden de ödemek zorunda kaldı. Yani şirket zararda."</p>
+        </div>
+
+        <div class="dialogue">
+          <div class="speaker">Voss</div>
+          <p>"Ya da şirketin içindeki biri, bu ölümlerden başka bir yoldan kazanç sağladı. Rakamlar bize 'kim' değil, 'nasıl' sorusunu sorduruyor. Bu önemli bir fark."</p>
+        </div>
+
+        <p>Calloway iskemlesinde geriye yaslandı. "Peki sıradaki adım?"</p>
+
+        <p>Voss pencereye döndü. Dışarıda Thames görünüyordu — gri, sessiz, her şeyi bilen. "Alderton ve Crane'in ölüm belgelerini isteyeceğiz," dedi. "Doktorların isimlerini. Ve Thames Life'ın 1903 primlerini kimin imzaladığını."</p>
+
+        <p>Durdu.</p>
+
+        <p>"Bir de şunu: Fenwick'in son haftasında kiminle görüştüğünü."</p>
+
+        <div class="concept-box" data-label="İstatistik Kavramı">
+          <h4>Korelasyon — İki Şeyin Birlikte Hareketi</h4>
+          <p>Voss aklının bir köşesinde yeni bir fikir biçimlendiğini hissediyordu. Alderton ve Crane'in ölümleri ile Fenwick'in ölümü arasında bir <strong>korelasyon</strong> vardı — üç olay birbirine yakın zamanda, birbirine bağlı kişiler etrafında gerçekleşmişti.</p>
+          <p>Korelasyon, iki değişkenin birlikte değişip değişmediğini ölçer. −1 ile +1 arasında bir değer alır:</p>
+          <span class="concept-formula">r = +1 → tam pozitif ilişki</span>
+          <span class="concept-formula">r = 0  → ilişki yok</span>
+          <span class="concept-formula">r = −1 → tam negatif ilişki</span>
+          <p>Ama Voss iyi bilirdi: <em>korelasyon, nedensellik değildir.</em> İki şeyin birlikte hareket etmesi, birinin diğerine yol açtığı anlamına gelmez. Bunu kanıtlamak için daha fazla veriye — ve daha fazla soruya — ihtiyaç vardı.</p>
+        </div>
+
+        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+        <p>O gece Voss odasına döndüğünde masasına oturdu ve defterine yazdı. Sayılar artık bir şekil almıştı zihninde — belirsiz bir şekil, ama yine de bir şekil. Üç ölüm, bir şirket, bir portföy ve ortalamanın yedi standart sapma uzağındaki bir değer.</p>
+
+        <p>Matematiksel olarak bu bir anomaliydi. Dedektiflik açısından ise bir kapıydı.</p>
+
+        <p>Kapının arkasında kimin durduğunu öğrenmek için içeri girmek gerekiyordu.</p>
+
+        <p>Voss kalemini bıraktı, lambasını söndürdü ve ilk kez üç gündür rahat bir nefes aldı. Çünkü artık biliyordu: sayılar yalan söylemez. İnsanlar söyler. Ve sayılar, insanların yalanlarını er ya da geç ele verirdi.</p>
+
+      </div><!-- /story -->
+
+      <div class="concept-sidebar">
+        <div class="sidebar-title">Bu Bölümde Geçen Kavramlar</div>
+        <span class="concept-tag">Varyans</span>
+        <span class="concept-tag">Standart Sapma</span>
+        <span class="concept-tag">Normal Dağılım</span>
+        <span class="concept-tag">Anomali / Aykırı Gözlem</span>
+        <span class="concept-tag">Korelasyon</span>
+        <span class="concept-tag">Nedensellik ≠ Korelasyon</span>
+      </div>
+
+      <div class="chapter-end">
+        <div class="chapter-end-ornament">— ✦ —</div>
+        <button class="next-chapter-btn" onclick="alert('IV. Bölüm yakında!')">
+          IV. Bölüme Geç →
+        </button>
+        <p class="coming-soon">IV. Bölüm: <em>"Hipotez"</em> — Voss şüphelisini buluyor; ama kanıtlamak için hipotez testi gerekiyor</p>
       </div>
 
     </article>
