@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" class="no-js">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -730,6 +730,17 @@
     transform: translateY(0);
   }
 
+  /* Fallback: if JS fails or observer doesn't fire, show content after 2s */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+
+  /* noscript fallback handled via class on html */
+  .no-js .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
   /* ============================================
      RESPONSIVE
      ============================================ */
@@ -762,6 +773,7 @@
 </style>
 </head>
 <body>
+<script>document.documentElement.classList.remove('no-js');</script>
 
 <!-- READING PROGRESS BAR -->
 <div class="progress-bar" id="progressBar"></div>
@@ -1109,54 +1121,76 @@
      ============================================ -->
 <script>
 (function() {
-  // Reveal on scroll
-  const reveals = document.querySelectorAll('.reveal');
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        revealObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.15 });
-  reveals.forEach(el => revealObserver.observe(el));
+  // Reveal on scroll — with fallback
+  var reveals = document.querySelectorAll('.reveal');
+
+  if ('IntersectionObserver' in window) {
+    var revealObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.05, rootMargin: '0px 0px 50px 0px' });
+
+    reveals.forEach(function(el) { revealObserver.observe(el); });
+
+    // Safety net: if after 3 seconds some reveals haven't fired, force them
+    setTimeout(function() {
+      reveals.forEach(function(el) {
+        if (!el.classList.contains('visible')) {
+          el.classList.add('visible');
+        }
+      });
+    }, 3000);
+  } else {
+    // No IntersectionObserver support — show everything
+    reveals.forEach(function(el) { el.classList.add('visible'); });
+  }
 
   // Sticky nav
-  const hero = document.getElementById('hero');
-  const stickyNav = document.getElementById('stickyNav');
-  const navObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      stickyNav.classList.toggle('visible', !entry.isIntersecting);
-    });
-  }, { threshold: 0 });
-  navObserver.observe(hero);
+  var hero = document.getElementById('hero');
+  var stickyNav = document.getElementById('stickyNav');
+  if ('IntersectionObserver' in window && hero && stickyNav) {
+    var navObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        stickyNav.classList.toggle('visible', !entry.isIntersecting);
+      });
+    }, { threshold: 0 });
+    navObserver.observe(hero);
+  }
 
   // Progress bar
-  const progressBar = document.getElementById('progressBar');
-  window.addEventListener('scroll', () => {
-    const scrollTop = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-    progressBar.style.width = progress + '%';
-  });
+  var progressBar = document.getElementById('progressBar');
+  if (progressBar) {
+    window.addEventListener('scroll', function() {
+      var scrollTop = window.scrollY;
+      var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = progress + '%';
+    });
+  }
 
   // Highlight current chapter in sticky nav
-  const chapters = document.querySelectorAll('.chapter, .chapter-coming');
-  const navLinks = document.querySelectorAll('.sticky-nav .nav-chapters a');
-  const chapterObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const id = entry.target.id;
-        navLinks.forEach(link => {
-          link.classList.remove('current');
-          if (link.getAttribute('href') === '#' + id) {
-            link.classList.add('current');
-          }
-        });
-      }
-    });
-  }, { threshold: 0.3 });
-  chapters.forEach(ch => chapterObserver.observe(ch));
+  var chapters = document.querySelectorAll('.chapter, .chapter-coming');
+  var navLinks = document.querySelectorAll('.sticky-nav .nav-chapters a');
+  if ('IntersectionObserver' in window && chapters.length && navLinks.length) {
+    var chapterObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var id = entry.target.id;
+          navLinks.forEach(function(link) {
+            link.classList.remove('current');
+            if (link.getAttribute('href') === '#' + id) {
+              link.classList.add('current');
+            }
+          });
+        }
+      });
+    }, { threshold: 0.2 });
+    chapters.forEach(function(ch) { chapterObserver.observe(ch); });
+  }
 })();
 </script>
 
