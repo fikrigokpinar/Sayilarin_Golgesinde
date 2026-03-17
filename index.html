@@ -3,1228 +3,1162 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sayıların Gölgesinde — İstatistik Romanı</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=IM+Fell+English:ital@0;1&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<title>Sayıların Gölgesinde — Bir İstatistik Romanı</title>
+<meta name="description" content="Edmund Voss ve Belirsizliğin Bilimi. 1903 Londra'sında geçen bir istatistik dedektif romanı.">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
 <style>
   :root {
-    --ink: #1a1008;
-    --ink-faded: #3d2b1a;
-    --paper: #f5ead6;
-    --paper-dark: #e8d5b0;
-    --paper-darker: #d4bb8a;
+    --ink: #1a1410;
+    --ink-light: #3d3529;
+    --ink-muted: #6b5e4f;
+    --parchment: #f5f0e8;
+    --parchment-dark: #e8e0d2;
+    --parchment-deep: #d4c9b5;
     --accent: #8b2500;
-    --accent-gold: #c8922a;
-    --concept-bg: #f0e4c8;
-    --concept-border: #8b6914;
-    --shadow: rgba(26,16,8,0.25);
+    --accent-light: #a63a17;
+    --gold: #b8860b;
+    --gold-light: #d4a843;
+    --chapter-bg: #f0ebe2;
+    --fog: rgba(245, 240, 232, 0.92);
+    --shadow: rgba(26, 20, 16, 0.12);
+    --shadow-deep: rgba(26, 20, 16, 0.25);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  body {
-    background: #2a1a08;
-    font-family: 'Crimson Text', Georgia, serif;
+  ::selection {
+    background: var(--gold-light);
     color: var(--ink);
-    min-height: 100vh;
   }
 
-  /* Paper texture overlay */
+  html {
+    scroll-behavior: smooth;
+    font-size: 18px;
+  }
+
+  body {
+    font-family: 'EB Garamond', 'Libre Baskerville', Georgia, serif;
+    background: var(--parchment);
+    color: var(--ink);
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ============================================
+     TEXTURE OVERLAY
+     ============================================ */
   body::before {
     content: '';
     position: fixed;
-    inset: 0;
-    background-image: 
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
     pointer-events: none;
     z-index: 9999;
-    opacity: 0.5;
   }
 
-  /* ── HEADER ── */
-  .site-header {
-    background: var(--ink);
-    padding: 2rem 0 1.5rem;
-    text-align: center;
-    border-bottom: 3px double var(--accent-gold);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .site-header::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg, transparent, transparent 2px, rgba(200,146,42,0.03) 2px, rgba(200,146,42,0.03) 4px
-    );
-  }
-
-  .header-ornament {
-    color: var(--accent-gold);
-    font-size: 1.1rem;
-    letter-spacing: 0.4em;
-    margin-bottom: 0.5rem;
-    font-family: 'IM Fell English', serif;
-    opacity: 0.8;
-  }
-
-  .site-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2.2rem, 5vw, 3.8rem);
-    font-weight: 900;
-    color: var(--paper);
-    line-height: 1.1;
-    letter-spacing: 0.02em;
-  }
-
-  .site-subtitle {
-    color: var(--accent-gold);
-    font-family: 'IM Fell English', serif;
-    font-style: italic;
-    font-size: 1.15rem;
-    margin-top: 0.4rem;
-    letter-spacing: 0.05em;
-  }
-
-  .header-rule {
-    width: 200px;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--accent-gold), transparent);
-    margin: 1rem auto 0;
-  }
-
-  /* ── NAV / CHAPTER LIST ── */
-  .chapter-nav {
-    background: var(--paper-dark);
-    border-bottom: 2px solid var(--paper-darker);
-    padding: 0.75rem 0;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 12px var(--shadow);
-  }
-
-  .chapter-nav-inner {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 2rem;
+  /* ============================================
+     HERO / COVER
+     ============================================ */
+  .hero {
+    min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .nav-label {
-    font-family: 'Playfair Display', serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--ink-faded);
-    margin-right: 0.5rem;
-  }
-
-  .chapter-btn {
-    background: none;
-    border: 1px solid var(--paper-darker);
-    color: var(--ink-faded);
-    font-family: 'IM Fell English', serif;
-    font-size: 0.9rem;
-    padding: 0.3rem 0.9rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    border-radius: 2px;
-  }
-
-  .chapter-btn:hover, .chapter-btn.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--paper);
-  }
-
-  .chapter-btn.locked {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-
-  /* ── MAIN LAYOUT ── */
-  .main {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 3rem 1.5rem 6rem;
-  }
-
-  /* ── CHAPTER PANEL ── */
-  .chapter {
-    display: none;
-    animation: pageReveal 0.6s ease forwards;
-  }
-
-  .chapter.active { display: block; }
-
-  @keyframes pageReveal {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ── NEWSPAPER/BOOK PAGE ── */
-  .book-page {
-    background: var(--paper);
-    box-shadow: 
-      0 1px 0 var(--paper-darker) inset,
-      4px 4px 0 var(--paper-darker),
-      8px 8px 0 rgba(0,0,0,0.1),
-      0 20px 60px rgba(0,0,0,0.4);
-    padding: 4rem 4.5rem;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 2rem;
     position: relative;
-    border: 1px solid var(--paper-darker);
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(184, 134, 11, 0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at 70% 80%, rgba(139, 37, 0, 0.04) 0%, transparent 60%),
+      linear-gradient(to bottom, #ede7db, var(--parchment));
   }
 
-  .book-page::before {
+  .hero::after {
     content: '';
     position: absolute;
-    left: 3.5rem;
-    top: 0; bottom: 0;
-    width: 1px;
-    background: rgba(139,101,20,0.2);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(to bottom, transparent, var(--parchment));
   }
 
-  /* ── CHAPTER HEADER ── */
-  .chapter-header {
-    text-align: center;
+  .hero-ornament {
+    font-size: 1.4rem;
+    color: var(--gold);
+    letter-spacing: 0.6em;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.3s forwards;
+  }
+
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem;
+    font-weight: 300;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.5s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.6rem, 6vw, 4.5rem);
+    font-weight: 300;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 1rem;
+    letter-spacing: -0.01em;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.7s forwards;
+  }
+
+  .hero-author {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink-muted);
     margin-bottom: 3rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--paper-darker);
+    opacity: 0;
+    animation: fadeUp 1s ease 0.9s forwards;
+  }
+
+  .hero-line {
+    width: 60px;
+    height: 1px;
+    background: var(--gold);
+    margin: 0 auto 3rem;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.1s forwards;
+  }
+
+  /* ============================================
+     CHAPTER NAVIGATION (TABLE OF CONTENTS)
+     ============================================ */
+  .toc {
+    opacity: 0;
+    animation: fadeUp 1s ease 1.3s forwards;
+  }
+
+  .toc-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .toc-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 1.2rem;
+  }
+
+  .toc-list li a {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--ink-light);
+    text-decoration: none;
+    padding: 0.35rem 0.8rem;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    display: inline-block;
+  }
+
+  .toc-list li a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .toc-list li a.disabled {
+    color: var(--parchment-deep);
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .toc-list li a.active {
+    color: var(--accent);
+    border-color: var(--gold);
+  }
+
+  /* ============================================
+     SCROLL INDICATOR
+     ============================================ */
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.6s forwards;
+  }
+
+  .scroll-hint span {
+    display: block;
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    margin: 0 auto;
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.3); }
+  }
+
+  /* ============================================
+     CHAPTER SECTIONS
+     ============================================ */
+  .chapter {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 5rem 2rem 6rem;
+    position: relative;
   }
 
   .chapter-number {
-    font-family: 'Playfair Display', serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.3em;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.4em;
     text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 0.75rem;
+    color: var(--ink-muted);
+    text-align: center;
+    margin-bottom: 0.8rem;
   }
 
   .chapter-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-    font-weight: 900;
-    font-style: italic;
-    line-height: 1.2;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 400;
+    text-align: center;
     color: var(--ink);
+    margin-bottom: 2.5rem;
+    line-height: 1.25;
   }
 
-  .chapter-epigraph {
-    margin-top: 1.2rem;
+  .epigraph {
     font-style: italic;
-    color: var(--ink-faded);
-    font-size: 1rem;
-    max-width: 420px;
-    margin-left: auto;
-    margin-right: auto;
-    line-height: 1.6;
+    text-align: center;
+    color: var(--ink-muted);
+    font-size: 0.95rem;
+    line-height: 1.9;
+    margin-bottom: 3rem;
+    padding: 0 2rem;
+    position: relative;
   }
 
-  .chapter-epigraph cite {
+  .epigraph::before {
+    content: '"';
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem;
+    color: var(--gold);
+    opacity: 0.4;
+    position: absolute;
+    top: -1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    line-height: 1;
+  }
+
+  .epigraph-source {
     display: block;
-    margin-top: 0.3rem;
+    margin-top: 0.6rem;
     font-style: normal;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
+    color: var(--parchment-deep);
     letter-spacing: 0.05em;
   }
 
-  /* ── STORY TEXT ── */
-  .story p {
-    font-size: 1.18rem;
-    line-height: 1.85;
-    color: var(--ink);
-    margin-bottom: 1.4rem;
+  /* ============================================
+     PROSE
+     ============================================ */
+  .prose p {
+    margin-bottom: 1.3rem;
     text-align: justify;
     hyphens: auto;
+    text-indent: 1.5em;
   }
 
-  .story p:first-of-type::first-letter {
-    font-family: 'Playfair Display', serif;
-    font-size: 4.2rem;
-    font-weight: 900;
+  .prose p:first-of-type,
+  .prose h3 + p,
+  .prose h4 + p,
+  .prose .scene-break + p,
+  .prose .document-block + p,
+  .prose .dialogue + p {
+    text-indent: 0;
+  }
+
+  .prose p:first-of-type::first-letter {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.8em;
     float: left;
-    line-height: 0.8;
-    margin-right: 0.1em;
-    margin-top: 0.1em;
+    line-height: 0.75;
+    margin: 0.08em 0.12em 0 0;
     color: var(--accent);
+    font-weight: 600;
   }
 
-  .story em {
+  .prose em {
     font-style: italic;
-    color: var(--ink-faded);
+    color: var(--ink-light);
   }
 
-  .story strong {
+  .prose strong {
     font-weight: 600;
     color: var(--ink);
   }
 
-  /* ── SCENE BREAK ── */
+  /* ============================================
+     SCENE BREAKS
+     ============================================ */
   .scene-break {
     text-align: center;
     margin: 2.5rem 0;
-    color: var(--accent-gold);
-    font-size: 1.1rem;
-    letter-spacing: 0.5em;
+    color: var(--gold);
+    font-size: 1rem;
+    letter-spacing: 0.8em;
+    user-select: none;
   }
 
-  /* ── CONCEPT BOX ── */
-  .concept-box {
-    background: var(--concept-bg);
-    border-left: 4px solid var(--concept-border);
-    border: 1px solid var(--concept-border);
-    border-left-width: 4px;
-    padding: 1.4rem 1.8rem;
+  /* ============================================
+     DOCUMENT BLOCKS (telegrams, notes, tables)
+     ============================================ */
+  .document-block {
+    background: linear-gradient(135deg, #faf6ee 0%, #f2ecdf 100%);
+    border: 1px solid var(--parchment-deep);
+    border-left: 3px solid var(--gold);
+    padding: 1.5rem 1.8rem;
     margin: 2rem 0;
-    position: relative;
-    box-shadow: inset 0 0 40px rgba(139,105,20,0.06);
-  }
-
-  .concept-box::before {
-    content: attr(data-label);
-    position: absolute;
-    top: -0.65rem;
-    left: 1.2rem;
-    background: var(--concept-bg);
-    padding: 0 0.5rem;
-    font-family: 'Playfair Display', serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--concept-border);
-    font-weight: 700;
-  }
-
-  .concept-box h4 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--accent);
-    margin-bottom: 0.6rem;
-  }
-
-  .concept-box p {
-    font-size: 1.02rem;
+    font-size: 0.9rem;
     line-height: 1.7;
-    color: var(--ink-faded);
-    margin-bottom: 0.5rem;
+    position: relative;
+    box-shadow: 2px 3px 8px var(--shadow);
   }
 
-  .concept-box p:last-child { margin-bottom: 0; }
-
-  .concept-formula {
-    font-family: 'IM Fell English', serif;
-    font-style: italic;
-    font-size: 1.05rem;
-    color: var(--accent);
-    background: rgba(139,37,0,0.06);
-    padding: 0.4rem 0.8rem;
-    display: inline-block;
-    margin: 0.4rem 0;
-    border-radius: 2px;
+  .document-block::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 0; height: 0;
+    border-style: solid;
+    border-width: 0 20px 20px 0;
+    border-color: transparent var(--parchment) transparent transparent;
   }
 
-  /* ── DIALOGUE ── */
-  .dialogue {
-    margin: 0.8rem 0;
-    padding-left: 1.5rem;
-    border-left: 2px solid var(--paper-darker);
-  }
-
-  .speaker {
-    font-family: 'Playfair Display', serif;
-    font-size: 0.72rem;
+  .document-block .doc-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 0.82rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 0.1rem;
+    color: var(--ink-muted);
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--parchment-deep);
   }
 
-  /* ── CLUE CARD ── */
-  .clue-card {
-    background: var(--ink);
-    color: var(--paper);
-    padding: 1.2rem 1.6rem;
+  /* ============================================
+     DATA TABLE (Fenwick's records)
+     ============================================ */
+  .data-table-wrapper {
+    overflow-x: auto;
     margin: 2rem 0;
-    position: relative;
-    transform: rotate(-0.5deg);
-    box-shadow: 3px 3px 0 var(--accent), 6px 6px 12px rgba(0,0,0,0.3);
+    -webkit-overflow-scrolling: touch;
   }
 
-  .clue-card::before {
-    content: '🔍 İPUCU';
-    font-family: 'Playfair Display', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.25em;
-    color: var(--accent-gold);
-    display: block;
-    margin-bottom: 0.5rem;
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    background: #faf6ee;
+    box-shadow: 2px 3px 8px var(--shadow);
   }
 
-  .clue-card p {
-    font-family: 'IM Fell English', serif;
+  .data-table th {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    background: var(--parchment-dark);
+    padding: 0.7rem 1rem;
+    text-align: left;
+    border-bottom: 2px solid var(--gold);
+  }
+
+  .data-table td {
+    padding: 0.55rem 1rem;
+    border-bottom: 1px solid var(--parchment-deep);
+    vertical-align: top;
+  }
+
+  .data-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .data-table tr.highlight td {
+    background: rgba(139, 37, 0, 0.06);
+    font-weight: 600;
+  }
+
+  .data-table .red-mark {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ============================================
+     SECTION HEADINGS (in-chapter)
+     ============================================ */
+  .prose h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 3rem 0 1.2rem;
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+
+  .prose h3::before,
+  .prose h3::after {
+    content: '—';
+    margin: 0 0.6em;
+    color: var(--gold);
+    font-weight: 300;
+  }
+
+  /* ============================================
+     MATH / FORMULA BLOCKS
+     ============================================ */
+  .formula {
+    text-align: center;
+    margin: 1.8rem 0;
+    padding: 1rem;
+    font-family: 'EB Garamond', serif;
     font-style: italic;
     font-size: 1.05rem;
-    line-height: 1.6;
-    color: var(--paper) !important;
-    text-align: left !important;
-    margin: 0 !important;
+    color: var(--ink-light);
+    border-top: 1px solid var(--parchment-deep);
+    border-bottom: 1px solid var(--parchment-deep);
+    background: rgba(184, 134, 11, 0.03);
+    letter-spacing: 0.02em;
   }
 
-  /* ── CHAPTER END / NEXT ── */
-  .chapter-end {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--paper-darker);
+  /* ============================================
+     DIALOGUE
+     ============================================ */
+  .dialogue {
+    margin: 1.5rem 0;
+    padding-left: 1.2rem;
+    border-left: 2px solid var(--parchment-deep);
+  }
+
+  .dialogue .speaker {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 0.88rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 0.2rem;
+  }
+
+  .dialogue p {
+    text-indent: 0 !important;
+    margin-bottom: 0.4rem;
+    text-align: left !important;
+  }
+
+  /* ============================================
+     CONCEPTS BOX
+     ============================================ */
+  .concepts-box {
+    margin: 3.5rem 0 2rem;
+    padding: 1.8rem 2rem;
+    border: 1px solid var(--parchment-deep);
+    background: linear-gradient(to bottom, #faf7f0, var(--parchment));
     text-align: center;
   }
 
-  .chapter-end-ornament {
-    font-size: 1.4rem;
-    color: var(--accent-gold);
-    letter-spacing: 0.5em;
-    margin-bottom: 1rem;
-  }
-
-  .next-chapter-btn {
-    background: var(--accent);
-    color: var(--paper);
-    border: none;
-    font-family: 'Playfair Display', serif;
-    font-size: 1rem;
-    font-style: italic;
-    padding: 0.8rem 2.2rem;
-    cursor: pointer;
-    letter-spacing: 0.04em;
-    transition: all 0.25s;
-    box-shadow: 3px 3px 0 var(--ink);
-  }
-
-  .next-chapter-btn:hover {
-    background: var(--ink);
-    box-shadow: 3px 3px 0 var(--accent);
-    transform: translate(-1px, -1px);
-  }
-
-  .coming-soon {
-    font-family: 'IM Fell English', serif;
-    font-style: italic;
-    color: var(--ink-faded);
-    font-size: 0.95rem;
-    margin-top: 0.8rem;
-  }
-
-  /* ── SIDEBAR CONCEPT LIST ── */
-  .concept-sidebar {
-    margin-top: 2.5rem;
-    padding: 1.5rem 2rem;
-    background: var(--paper-dark);
-    border: 1px solid var(--paper-darker);
-    border-top: 3px solid var(--accent);
-  }
-
-  .sidebar-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.2em;
+  .concepts-box h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.35em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--ink-muted);
     margin-bottom: 1rem;
   }
 
-  .concept-tag {
-    display: inline-block;
-    background: var(--paper);
-    border: 1px solid var(--concept-border);
-    color: var(--concept-border);
-    font-family: 'IM Fell English', serif;
-    font-size: 0.88rem;
-    padding: 0.2rem 0.7rem;
-    margin: 0.2rem 0.2rem 0.2rem 0;
+  .concepts-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 1.5rem;
+  }
+
+  .concepts-list li {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--ink-light);
+    position: relative;
+  }
+
+  .concepts-list li::before {
+    content: '◆';
+    font-size: 0.5rem;
+    color: var(--gold);
+    margin-right: 0.4rem;
+    vertical-align: middle;
+  }
+
+  /* ============================================
+     CHAPTER FOOTER / NAVIGATION
+     ============================================ */
+  .chapter-end {
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--parchment-deep);
+  }
+
+  .chapter-end .ornament {
+    color: var(--gold);
+    font-size: 1.1rem;
+    letter-spacing: 0.5em;
+    margin-bottom: 1.5rem;
+  }
+
+  .chapter-nav {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .chapter-nav a {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--ink-muted);
+    text-decoration: none;
+    padding: 0.5rem 1.2rem;
+    border: 1px solid var(--parchment-deep);
     border-radius: 2px;
+    transition: all 0.3s ease;
+    letter-spacing: 0.05em;
   }
 
-  /* ── RESPONSIVE ── */
-  @media (max-width: 640px) {
-    .book-page { padding: 2.5rem 1.8rem; }
-    .book-page::before { display: none; }
+  .chapter-nav a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
   }
 
-  /* ── SCROLL BAR ── */
-  ::-webkit-scrollbar { width: 8px; }
-  ::-webkit-scrollbar-track { background: var(--ink); }
-  ::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 2px; }
+  .chapter-nav a.disabled {
+    color: var(--parchment-deep);
+    pointer-events: none;
+  }
+
+  /* ============================================
+     COMING SOON CHAPTERS
+     ============================================ */
+  .chapter-coming {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+
+  .coming-icon {
+    font-size: 2rem;
+    color: var(--gold);
+    opacity: 0.5;
+    margin-bottom: 1rem;
+  }
+
+  .coming-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--ink-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .coming-subtitle {
+    font-size: 0.85rem;
+    color: var(--parchment-deep);
+    font-style: italic;
+  }
+
+  /* ============================================
+     SECTION DIVIDERS
+     ============================================ */
+  .divider {
+    max-width: 680px;
+    margin: 0 auto;
+    border: none;
+    border-top: 1px solid var(--parchment-deep);
+  }
+
+  /* ============================================
+     FOOTER
+     ============================================ */
+  .site-footer {
+    text-align: center;
+    padding: 3rem 2rem 4rem;
+    color: var(--parchment-deep);
+    font-size: 0.8rem;
+    font-style: italic;
+  }
+
+  .site-footer a {
+    color: var(--ink-muted);
+    text-decoration: none;
+  }
+
+  /* ============================================
+     STICKY NAV (appears on scroll)
+     ============================================ */
+  .sticky-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--fog);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--parchment-deep);
+    padding: 0.6rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1000;
+    transform: translateY(-100%);
+    transition: transform 0.4s ease;
+  }
+
+  .sticky-nav.visible {
+    transform: translateY(0);
+  }
+
+  .sticky-nav .nav-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+  }
+
+  .sticky-nav .nav-chapters {
+    display: flex;
+    gap: 0.3rem;
+  }
+
+  .sticky-nav .nav-chapters a {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--ink-muted);
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+
+  .sticky-nav .nav-chapters a:hover,
+  .sticky-nav .nav-chapters a.current {
+    color: var(--accent);
+    background: rgba(139, 37, 0, 0.06);
+  }
+
+  .sticky-nav .nav-chapters a.disabled {
+    color: var(--parchment-deep);
+    pointer-events: none;
+  }
+
+  /* ============================================
+     READING PROGRESS
+     ============================================ */
+  .progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(to right, var(--gold), var(--accent));
+    z-index: 1001;
+    width: 0%;
+    transition: width 0.1s;
+  }
+
+  /* ============================================
+     ANIMATIONS
+     ============================================ */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(25px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ============================================
+     RESPONSIVE
+     ============================================ */
+  @media (max-width: 768px) {
+    html { font-size: 16px; }
+    .chapter { padding: 3.5rem 1.3rem 4rem; }
+    .hero { padding: 3rem 1.5rem; }
+    .prose p:first-of-type::first-letter { font-size: 3.2em; }
+    .document-block { padding: 1.2rem 1.3rem; }
+    .sticky-nav .nav-title { display: none; }
+    .dialogue { padding-left: 0.8rem; }
+    .epigraph { padding: 0 0.5rem; }
+    .toc-list { gap: 0.3rem 0.6rem; }
+    .toc-list li a { font-size: 0.88rem; padding: 0.3rem 0.6rem; }
+  }
+
+  @media (max-width: 480px) {
+    .sticky-nav .nav-chapters a { font-size: 0.7rem; padding: 0.2rem 0.35rem; }
+  }
+
+  /* ============================================
+     PRINT STYLES
+     ============================================ */
+  @media print {
+    .sticky-nav, .progress-bar, .scroll-hint { display: none; }
+    .hero { min-height: auto; page-break-after: always; }
+    .chapter { page-break-before: always; }
+    body::before { display: none; }
+  }
 </style>
 </head>
 <body>
 
-<!-- ══ HEADER ══ -->
-<header class="site-header">
-  <div class="header-ornament">❧ &nbsp; Bir İstatistik Romanı &nbsp; ❧</div>
-  <h1 class="site-title">Sayıların Gölgesinde</h1>
-  <p class="site-subtitle">Edmund Voss ve Belirsizliğin Bilimi</p>
-  <div class="header-rule"></div>
-</header>
+<!-- READING PROGRESS BAR -->
+<div class="progress-bar" id="progressBar"></div>
 
-<!-- ══ CHAPTER NAV ══ -->
-<nav class="chapter-nav">
-  <div class="chapter-nav-inner">
-    <span class="nav-label">Bölümler:</span>
-    <button class="chapter-btn active" onclick="showChapter(1, this)">I. Bölüm</button>
-    <button class="chapter-btn" onclick="showChapter(2, this)">II. Bölüm</button>
-    <button class="chapter-btn" onclick="showChapter(3, this)">III. Bölüm</button>
-    <button class="chapter-btn" onclick="showChapter(4, this)">IV. Bölüm</button>
-    <button class="chapter-btn" onclick="showChapter(5, this)">V. Bölüm</button>
+<!-- STICKY NAV -->
+<nav class="sticky-nav" id="stickyNav">
+  <span class="nav-title">Sayıların Gölgesinde</span>
+  <div class="nav-chapters">
+    <a href="#bolum-1" class="current">I</a>
+    <a href="#bolum-2" class="disabled">II</a>
+    <a href="#bolum-3" class="disabled">III</a>
+    <a href="#bolum-4" class="disabled">IV</a>
+    <a href="#bolum-5" class="disabled">V</a>
+    <a href="#bolum-6" class="disabled">VI</a>
+    <a href="#bolum-7" class="disabled">VII</a>
   </div>
 </nav>
 
-<!-- ══ MAIN ══ -->
-<main class="main">
+<!-- ============================================
+     HERO / COVER
+     ============================================ -->
+<header class="hero" id="hero">
+  <div class="hero-ornament">❧</div>
+  <p class="hero-subtitle">Bir İstatistik Romanı</p>
+  <h1 class="hero-title">Sayıların Gölgesinde</h1>
+  <p class="hero-author">Edmund Voss ve Belirsizliğin Bilimi</p>
+  <div class="hero-line"></div>
 
-  <!-- ════ BÖLÜM I ════ -->
-  <section class="chapter active" id="chapter-1">
-    <article class="book-page">
+  <nav class="toc">
+    <p class="toc-label">Bölümler</p>
+    <ul class="toc-list">
+      <li><a href="#bolum-1" class="active">I. Bölüm</a></li>
+      <li><a href="#bolum-2" class="disabled">II. Bölüm</a></li>
+      <li><a href="#bolum-3" class="disabled">III. Bölüm</a></li>
+      <li><a href="#bolum-4" class="disabled">IV. Bölüm</a></li>
+      <li><a href="#bolum-5" class="disabled">V. Bölüm</a></li>
+      <li><a href="#bolum-6" class="disabled">VI. Bölüm</a></li>
+      <li><a href="#bolum-7" class="disabled">VII. Bölüm</a></li>
+    </ul>
+  </nav>
 
-      <header class="chapter-header">
-        <div class="chapter-number">Birinci Bölüm</div>
-        <h2 class="chapter-title">Ölü Adama Ait Rakamlar</h2>
-        <p class="chapter-epigraph">
-          "Dünya gözlemlerin birikiminden ibarettir.<br>
-          Sorun, hangisine güveneceğinizi bilmektir."
-          <cite>— Edmund Voss, Kişisel Notlar, 1903</cite>
-        </p>
-      </header>
+  <div class="scroll-hint">
+    <span></span>
+  </div>
+</header>
 
-      <div class="story">
+<!-- ============================================
+     BÖLÜM I
+     ============================================ -->
+<article class="chapter reveal" id="bolum-1">
+  <p class="chapter-number">Birinci Bölüm</p>
+  <h2 class="chapter-title">Ölü Adama Ait Rakamlar</h2>
 
-        <p>Londra'nın kasım sisi, Whitechapel'in dar sokaklarını sanki pamuğa sarmış gibiydi. Edmund Voss dışarı çıktığında saat henüz sabahın altısını çeyrek geçiyordu; ama hanedeki gaz lambası o saate kadar hiç sönmemişti. Masanın üzerinde üç ayrı deftere dağılmış rakamlar, boş bir fincan ve bir sigara izmariti bırakmıştı. Rakamlar onu bir haftadır bekliyordu; bugün sonunda konuşacaklardı.</p>
+  <div class="epigraph">
+    Dünya, gözlemlerin birikiminden ibarettir.<br>
+    Sorun şu ki çoğu insan gözlemleri değil,<br>
+    gözlemlerden çıkardığı ilk hissi hatırlar.
+    <span class="epigraph-source">— Edmund Voss, Kişisel Notlar, 1903</span>
+  </div>
 
-        <p>Voss'un mesleği ne dedektiflik ne de muhasebeciliğe benziyordu — ama ikisinin de kalbine dokunuyordu. <em>Adli istatistikçi.</em> Ölüm belgelerini, mahkeme kayıtlarını ve vergi defterlerini okuyordu; insanların gördüğü yerde rastlantı, onun gördüğü yerde örüntü yatardı. Polis müfettişleri zaman zaman ona gelirdi; o zaman Voss devreye girerdi.</p>
+  <div class="prose">
 
-        <div class="clue-card">
-          <p>Müfettiş Calloway'den telgraf, 5 Kasım 1903 sabahı:<br><br>
-          "Voss — Limehouse'da bir ölüm. Resmi kayıt: kalp krizi. Ailenin itirazı var. 
-          Noterde bir de dosya bırakmış: rakamlar içeriyor. Anlayan lazım. — C."</p>
-        </div>
+    <p>Londra'nın kasım sisini anlatmak için kelime aramaya gerek yoktur; o sisi yaşamak yeter. Boğazınıza yapışır, gözlerinizi yakar, ve eğer Whitechapel'de yaşıyorsanız — ki Edmund Voss yaşıyordu — sabahın altısında pencerenizi açtığınızda karşı binanın duvarını bile göremezsiniz. Voss yine de açtı. Her sabah açardı. Taze hava değil, bir ritüeldi bu; günün ilk gözlemi. <em>Sis var. Yoğunluk: orta. Rüzgâr: yok.</em> Zihnini böyle çalıştırırdı — dünyayı ölçerek, sayarak, kaydederek.</p>
 
-        <p>Ölünün adı Harold Fenwick'ti. Altmış iki yaşında, Thames kıyısında küçük bir sigorta acentesinin sahibi. Fenwick'in oğlu Albert, babasının "asla yorgun düşmeyen bir adam" olduğunu söylemişti müfettişe; kalp hastalığının hiçbir belirtisi yokmuş. Ama işte, noterde bir dosya. Ve dosyanın içinde bir tablo.</p>
+    <p>Arkasında, çalışma masası gecenin izlerini taşıyordu. Üç ayrı deftere dağılmış hesaplar, yarısı içilmiş bir çay — sütü çoktan kesilmiş — ve bir sigara izmariti. Küllüğe değil, masanın kenarına bırakılmıştı; bu Voss'un bir şeye daldığının ve dünyayı unuttuğunun en güvenilir göstergesiydi. Eşi Eleanor yaşasaydı kızardı. <em>"Edmund, bir gün bu evi yakacaksın."</em> Ama Eleanor iki yıldır yoktu. Tifüs almıştı onu, 1901'in sert bir kış gecesinde, ve Voss o günden beri masanın karşısındaki boş sandalyeye bakmamayı öğrenmişti. Öğrenemediği tek şey, o sandalyenin neden hâlâ orada durduğuydu.</p>
 
-        <div class="concept-box" data-label="İstatistik Kavramı">
-          <h4>Veri ve Gözlem</h4>
-          <p>Voss masaya oturduğunda ilk yaptığı şey tabloya bakmak değil, tablonun <em>ne olduğunu</em> anlamak oldu. Veriler ham gerçekliklerdir — ölçtüğünüz, saydığınız, kaydettiğiniz şeyler. Fenwick'in tablosundaki her satır bir <strong>gözlem</strong>, her sütun bir <strong>değişken</strong>idi.</p>
-          <p>Ama veri tek başına konuşmaz. Voss bunu yıllar içinde öğrenmişti: <em>"Rakamlar yalnızca doğru soruyla dile gelir."</em></p>
-        </div>
+    <p>Saat altıyı çeyrek geçiyordu. Kapı zili çaldı.</p>
 
-        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+    <p>Voss kaşlarını çattı. Bu saatte kimse gelmezdi — postacı bile yediyi beklerdi. Merdivenlerden inerken ayak seslerini saydı — on dört basamak, her zaman on dört — ve kapıyı açtı.</p>
 
-        <p>Müfettişin ofisine yürürken Voss dosyayı açık tuttu. Fenwick'in tablosunda yirmi iki satır vardı: her satır bir poliçe, her poliçe bir müşteri, her müşterinin yanında bir rakam sütunu. Poliçe tutarı, müşterinin yaşı, ödeme süresi ve — bu ilginçti — <em>müşterinin tahmini ölüm tarihi.</em></p>
+    <p>Karşısında bir çocuk duruyordu. On bir, belki on iki yaşında, yüzü kırmızı, nefes nefese. Elinde sarı bir zarf.</p>
 
-        <p>Voss durdu. Islak kaldırımda durdu ve bir daha okudu.</p>
+    <p>"Bay Voss? Müfettiş Calloway'den, efendim. Acil dedi."</p>
 
-        <p><em>Tahmini ölüm tarihi.</em></p>
+    <p>Voss zarfı aldı. Cebinden bir peni çıkarıp çocuğa uzattı; çocuk teşekkür etmeden koşarak uzaklaştı. Voss zarfı açmadan önce bir an tuttu — zarfın ağırlığını, kâğıdın kalınlığını hissetti. Alışkanlıktı bu; her nesne bir veri noktasıydı onun için.</p>
 
-        <p>Fenwick bir sigorta acentesiydi. Sigorta acenteleri böyle tablolar tutardı — hayat sigortası hesaplamaları için ölüm olasılıklarına bakarlardı. Buna "aktüerya" denirdi. Ama Voss'u asıl durduran şey sütunun başlığı değil, son iki satırdaki isimlerdi. Birinin yanında kırmızı mürekkeple bir çarpı işareti vardı. Diğerinin yanında da.</p>
+    <p>Zarfın içinde tek bir kart vardı:</p>
 
-        <p>İkisi de bu sonbaharda ölmüştü.</p>
+    <div class="document-block">
+      <div class="doc-title">Müfettiş Calloway'den telgraf, 5 Kasım 1903</div>
+      Voss — Limehouse'da bir ölüm. Resmi kayıt: kalp krizi. Ailenin itirazı var. Noterde bir de dosya bırakmış: rakamlar içeriyor. Anlayan lazım. Bu sabah gel.<br>
+      <em>— C.</em>
+    </div>
 
-        <div class="concept-box" data-label="İstatistik Kavramı">
-          <h4>Olasılık — Belirsizliğin Dili</h4>
-          <p>Voss o gece defterine şunu yazdı: <em>"İki kişi aynı sonbaharda öldü. Bu bir tesadüf mü, yoksa bir örüntü mü? Soruyu doğru sormak için olasılığa ihtiyacım var."</em></p>
-          <p>Olasılık, belirsizliği sayıya dökmektir. Bir olayın gerçekleşme şansını 0 ile 1 arasında ifade ederiz:</p>
-          <span class="concept-formula">P(A) = (A'nın gerçekleşme sayısı) / (Toplam mümkün sonuç sayısı)</span>
-          <p>Eğer tablodaki kırk kişiden ikisi aynı mevsimde ölüyorsa, bu durum gerçekten "şaşırtıcı" mıdır? Yoksa hayat sigortası portföyünde beklenen bir şey midir? Voss bunu hesaplayana kadar "şüpheli" demezdi — çünkü sezgi aldatıcıdır, ama sayılar tartışılmaz.</p>
-        </div>
+    <p>Voss kartı çevirdi, arkasına baktı — boş. Calloway'in el yazısını tanıyordu; sert, sola yatık harfler, kelimelerin arasına fazla boşluk bırakan bir adam. Yedi yıldır tanıyordu Thomas Calloway'i. Whitechapel zehirlenme davası — Voss'un adli istatistikçi olarak ilk büyük işi. O davada herkes Voss'un hesaplarına güldü: <em>"Rakamlarla cinayet mi çözülür?"</em> Calloway gülmedi. Voss'un analizini mahkemeye taşıdı, şüpheliyi mahkûm ettirdi, ve o günden sonra Voss'un kapısını her zorlu davada çaldı. Londra polisinin bu kadar basit bir güven ilişkisine bile ihtiyacı vardı; Voss bunu biliyordu. Calloway da.</p>
 
-        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+    <div class="scene-break">✦ ✦ ✦</div>
 
-        <p>Müfettiş Calloway kırk beş yaşında, geniş omuzlu, sigara yakan gözlü bir adamdı. Voss'u kapıda karşıladı; elinde Fenwick'in dosyasının bir kopyası vardı.</p>
+    <p>Limehouse'a yürümek yarım saat sürdü. Voss yürümeyi severdi — düşünmek için en iyi araçtı. Omnibüse binmek zihnini bölüyordu; kalabalık, gürültü, birinin dirseği böğrünüze dayanır, düşüncenin ipini kaçırırsınız. Yürürken ise dünya bir arka plan olur, zihin serbest kalır.</p>
 
-        <div class="dialogue">
-          <div class="speaker">Calloway</div>
-          <p>"İki ölüm. Aynı portföydeki iki kişi. Aile tesadüf diyor. Ben tesadüfe pek inanmam, Voss."</p>
-        </div>
+    <p>Sis Limehouse'a doğru yoğunlaşıyordu. Thames'in nemi sokakları ıslak bir battaniye gibi sarıyordu; kaldırım taşları kaygan, duvarlar nemli, hava ağır. Rıhtımdaki işçiler çoktan başlamıştı — halatlar çekiliyordu, kutular yığılıyordu, arada bir bağırış duyuluyordu. Voss bunların hiçbirini görmedi; gözleri açık ama zihni zarftaki iki kelimeye takılmıştı: <em>rakamlar içeriyor.</em></p>
 
-        <div class="dialogue">
-          <div class="speaker">Voss</div>
-          <p>"Ben de inanmam. Ama inanmak ya da inanmamak bilim değildir. Portföyde kaç kişi var toplamda?"</p>
-        </div>
+    <p>Harold Fenwick'in evi, Narrow Street'in sonundaki bir sıra evin ortasındaydı. Dışarıdan sıradan bir Viktoryen konut: üç katlı, tuğla cepheli, pencereleri siyah boyalı. Kapının önünde bir polis memuru bekliyordu; Voss'u tanıdı ve içeri yönlendirdi.</p>
 
-        <div class="dialogue">
-          <div class="speaker">Calloway</div>
-          <p>"Kırk yedi."</p>
-        </div>
+    <p>Calloway salonda duruyordu. Geniş omuzlu, kırk beş yaşında, kalın bıyıklı bir adam. Pardesüsünü çıkarmamıştı — kol düğmeleri bile ilikliydi, sanki her an çıkacakmış gibi. Elinde bir fincan çay vardı ama içmiş gibi görünmüyordu; parmakları fincanın etrafında kenetlenmişti, düşünceli bir şekilde.</p>
 
-        <div class="dialogue">
-          <div class="speaker">Voss</div>
-          <p>"Kırk yedi kişilik bir grupta, bir yılda kaç ölüm bekleriz? Yaş ortalaması nedir?"</p>
-        </div>
+    <p>"Erken geldin," dedi Calloway, Voss'u görünce. Sesinde sıcaklık vardı — her zaman olduğu gibi. "Gel, otur. Sana anlatacaklarım var."</p>
 
-        <p>Calloway kaşlarını çattı. "Siz istatistikçiler hep böyle yaparsınız — cinayeti araştırırken nüfus istatistiğine dalarsınız."</p>
+    <p>Voss oturmadı. Odayı süzdü. Salon iyi döşenmiş ama sade bir yerdi: bir divan, iki koltuk, şöminenin üstünde bir saat, duvarda bir manzara tablosu — Thames'in bir yerinden, muhtemelen Greenwich. Yerde halı değil, hasır vardı. Ortadaki masanın üzerinde bir tepsi, tepside soğumuş çay ve üç fincan. <em>Üç fincan.</em> Voss bunu kaydetti ama sormadı. Henüz değil.</p>
 
-        <p>"Aksine," dedi Voss, dosyayı masaya açarken. "Cinayeti bulmak istiyorsanız önce <em>neyin normal olduğunu</em> bilmek zorundasınız. Yoksa her ölüm size şüpheli gelir."</p>
+    <p>"Anlat," dedi.</p>
 
-        <div class="concept-box" data-label="İstatistik Kavramı">
-          <h4>Popülasyon ve Örneklem</h4>
-          <p>Fenwick'in kırk yedi müşterisi, Voss için bir <strong>örneklemdi</strong> — Londra'daki tüm orta yaşlı sigorta müşterilerinden çekilmiş küçük bir kesit. Asıl soru şuydu: bu örneklemdeki ölüm oranı, <strong>popülasyonda</strong> beklenenden farklı mıydı?</p>
-          <p><strong>Popülasyon:</strong> İncelemek istediğimiz tüm bireyler veya olgular bütünü.</p>
-          <p><strong>Örneklem:</strong> Popülasyondan seçilen, incelenen alt küme.</p>
-          <p>Voss'un yaptığı şey buydu: kırk yedi kişilik örneklemden, tüm popülasyon hakkında çıkarım yapmaya çalışmak. Bu istatistiğin özüdür — <em>az ile çok hakkında konuşmak.</em></p>
-        </div>
+    <div class="dialogue">
+      <p class="speaker">Calloway</p>
+      <p>"Harold Fenwick. Altmış iki yaşında. Buranın sahibi. Küçük bir sigorta acentesi işletiyordu — hayat sigortası, ağırlıklı olarak Thames Life &amp; Assurance'ın poliçelerini satardı. Dün sabah oğlu Albert onu çalışma odasında bulmuş. Masasının başında, yüzüstü. Doktor kalp krizi demiş."</p>
+    </div>
 
-        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+    <p>"Ama?"</p>
 
-        <p>Voss öğleden sonraya kadar hesapladı. İngiltere'nin 1901 sayımından aldığı verilerle, kırk ile yetmiş yaş arasındaki erkeklerin yıllık ölüm oranını biliyordu: yaklaşık binde on dört. Kırk yedi kişilik bir grupta, bir yılda beklenen ölüm sayısı —</p>
+    <div class="dialogue">
+      <p class="speaker">Calloway</p>
+      <p>"Ama Albert itiraz etti. Babasının kalp sorunu olmadığını söylüyor. Otuz yıldır her sabah altıda kalkan, düzenli yaşayan, sigara içmeyen bir adam." Calloway durdu. "Ve bir şey daha var. Fenwick, ölümünden birkaç gün önce notere gitmiş. Bir dosya bırakmış. Albert dosyayı dün akşam aldı, bana getirdi. İçinde sayılar var, Voss. Tablolar. Ben bir şey anlamadım — ama sen anlarsın."</p>
+    </div>
 
-        <span class="concept-formula" style="display:block; text-align:center; margin: 1rem 2rem;">47 × 0.014 ≈ 0.66 kişi</span>
+    <p>Calloway ceketinin iç cebinden bir dosya çıkardı. Kalın, kahverengi bir karton klasör, kenarları yıpranmış. Voss'a uzattı — ve Voss, Calloway'in dosyayı uzatırken parmak uçlarının hafifçe titrediğini fark etti. Soğuktan mı? Heyecandan mı? Yoksa başka bir şeyden mi? Bunu da kaydetti. Karar vermedi.</p>
 
-        <p>Yani bir yılda bu grupta ortalama <em>bir</em> ölüm beklenir. İki ölüm şüpheli miydi? Belki. Ama sadece belki.</p>
+    <p>Dosyayı açtı.</p>
 
-        <p>Voss kalktı. Odasının tek penceresinden Thames'e baktı; sis hâlâ oradaydı. "Şüphe kanıt değildir," diye fısıldadı. "Ama bu tablonun içinde bir şey var."</p>
+    <h3>Veri ve Gözlem</h3>
 
-        <p>Çünkü o anda fark etmişti: kırmızı çarpı işareti taşıyan iki isim, portföyün geri kalanından farklı bir özellik taşıyordu. İkisi de, tam da Fenwick'in tahmini ölüm tarihi sütununa yazdığı <em>aynı aya</em> denk geliyordu.</p>
+    <p>İçeride üç sayfa vardı. Birincisi bir tablo: sütunlar ve satırlar, elle yazılmış, mürekkebi koyu mavi. Her satır bir müşterinin kaydıydı; her sütun başlığında kısa, özlü bir etiket.</p>
 
-        <p>Bu artık istatistik değil, soruşturmaydı.</p>
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>№</th>
+            <th>Müşteri</th>
+            <th>Yaş</th>
+            <th>Poliçe (£)</th>
+            <th>Poliçe Tarihi</th>
+            <th>Tahm. Ölüm</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>J. Barrow</td><td>44</td><td>800</td><td>Mart 1900</td><td>1918</td></tr>
+          <tr><td>2</td><td>T. Marsh</td><td>51</td><td>1.100</td><td>Ocak 1901</td><td>1920</td></tr>
+          <tr><td>3</td><td>R. Hale</td><td>47</td><td>950</td><td>Haziran 1899</td><td>1921</td></tr>
+          <tr><td colspan="6" style="text-align:center; color:var(--ink-muted); font-style:italic; padding:0.5rem;">· · ·  (22 satır)  · · ·</td></tr>
+          <tr class="highlight"><td class="red-mark">21</td><td class="red-mark">G. Alderton ✕</td><td>62</td><td>2.400</td><td>Haz. 1903</td><td class="red-mark">1912 → Ekim 1903</td></tr>
+          <tr class="highlight"><td class="red-mark">22</td><td class="red-mark">W. Crane ✕</td><td>65</td><td>2.800</td><td>May. 1903</td><td class="red-mark">1910 → Ekim 1903</td></tr>
+        </tbody>
+      </table>
+    </div>
 
-      </div><!-- /story -->
+    <p>Voss saydı: yirmi iki satır. Yirmi iki müşteri. Her satır bir <strong>gözlem</strong> — tek bir bireye ait ölçümlerin kaydı. Her sütun bir <strong>değişken</strong> — yaş, tutar, tarih gibi ölçülebilir ya da sınıflandırılabilir özellikler.</p>
 
-      <!-- Concept sidebar -->
-      <div class="concept-sidebar">
-        <div class="sidebar-title">Bu Bölümde Geçen Kavramlar</div>
-        <span class="concept-tag">Veri &amp; Gözlem</span>
-        <span class="concept-tag">Olasılık</span>
-        <span class="concept-tag">Popülasyon</span>
-        <span class="concept-tag">Örneklem</span>
-        <span class="concept-tag">Beklenen Değer</span>
-      </div>
+    <p><em>Veri</em> budur: ham gerçeklikler. Ölçtüğünüz, saydığınız, kaydettiğiniz şeyler. Henüz yorum yoktur, henüz anlam yoktur. Veri tek başına konuşmaz — tıpkı bir tanığın, doğru soruyu sormadan konuşmayacağı gibi.</p>
 
-      <div class="chapter-end">
-        <div class="chapter-end-ornament">— ✦ —</div>
-        <button class="next-chapter-btn" onclick="showChapter(2, document.querySelectorAll('.chapter-btn')[1])">
-          II. Bölüme Geç →
-        </button>
-      </div>
+    <p>Ama Voss tanıklara değil, verilere sorardı. Ve verilerin bir avantajı vardı: yalan söyleyemezlerdi. En azından kendileri söyleyemezdi. <em>Veriyi toplayan</em> söyleyebilirdi — ama bu başka bir meseledir.</p>
 
-    </article>
-  </section>
+    <p>İkinci sayfa daha kısaydı: on beş satırlık bir liste. Fenwick'in müşterilerinden bazılarının ödeme geçmişi — poliçe açılış tarihi, son prim ödemesi, durum. Üçüncü sayfa ise yarım kalmıştı. Birkaç satır hesaplama, sonra durmuştu. Sayfanın altında, kırmızı mürekkeple, iki ismin altı çizilmişti.</p>
 
+    <p>Voss okumaya devam etmeden önce durdu. Dosyanın içindekilere değil, <em>dosyanın kendisine</em> baktı. Kenarları düzgün kesilmişti ama sol üst köşedeki zımba izi, bir zamanlar daha fazla sayfa olduğunu gösteriyordu. Zımba iki sayfa kalınlığında iz bırakmıştı — ama dosyada üç sayfa vardı. Yani en az bir sayfa daha olmuştu, belki iki.</p>
 
-  <!-- ════ BÖLÜM II ════ -->
-  <section class="chapter" id="chapter-2">
-    <article class="book-page">
+    <p>"Bu dosyada başka sayfa var mıydı?" diye sordu Voss.</p>
 
-      <header class="chapter-header">
-        <div class="chapter-number">İkinci Bölüm</div>
-        <h2 class="chapter-title">Merkez Nerededir?</h2>
-        <p class="chapter-epigraph">
-          "Ortalama, bir kalabalığı tek bir rakama hapseder.<br>
-          Ama kalabalık asla tek bir rakam değildir."
-          <cite>— Edmund Voss, Kişisel Notlar, 1903</cite>
-        </p>
-      </header>
+    <p>Calloway omuz silkti. "Albert bana böyle getirdi. Noterdeki haliyle."</p>
 
-      <div class="story">
+    <p>Voss başını salladı. Belki de noter sayfaları ayırmıştı. Belki Fenwick kendisi çıkarmıştı. <em>Belki.</em> Bu "belki"yi bir kenara koydu — sonra dönerdi.</p>
 
-        <p>Fenwick'in ev halkını ancak ertesi sabah görebildi Voss. Limehouse'daki köşk, Thames'e bakan dar bir sokağa sıkışmıştı; dışarıdan bakılınca sıradan, içeriden ise gizli hesapların kokusu aldı. Albert Fenwick — ölen adamın oğlu, kırk yaşında, yorgun gözlü — kapıyı kendisi açtı. Elleri titriyordu ya da Voss öyle sanmıştı; sonradan anlayacaktı ki eller değil, gerçeğin kendisi titremekteydi.</p>
+    <div class="scene-break">✦ ✦ ✦</div>
 
-        <p>"Babam her sabah saat altıda kalkardı," dedi Albert, Voss'u çalışma odasına alırken. "Otuz yıl boyunca hiç değişmedi. Poliçelerini gözden geçirirdi, müşteri kayıtlarını güncellerdi. Sıradan bir sabah gibi başladı. Sonra öğleden önce kalp krizi."</p>
+    <p>Calloway onu yukarı kata, Fenwick'in çalışma odasına çıkardı. Oda küçüktü: bir masa, bir sandalye, duvarda raflar, raflarda defterler. Masa hâlâ dokunulmamıştı — Calloway'in emriyle. Üzerinde açık bir hesap defteri, birkaç kalem, bir mürekkep hokkası ve — Voss'un dikkatini çeken — bir kutu kibrit duruyordu. Kibrit kutusunun üstünde, elle yazılmış küçük bir not:</p>
 
-        <p>Voss, Fenwick'in masasına yaklaştı. Masa hâlâ dokunulmamıştı — polis izin vermemişti. Üzerinde açık bir defter ve birkaç sayfa vardı. Sayfalarda sütunlar, sütunlarda rakamlar. Voss bir sandalye çekti ve oturdu.</p>
+    <div class="document-block">
+      <em>"47 — kontrol et."</em>
+    </div>
 
-        <div class="clue-card">
-          <p>Fenwick'in masasındaki açık defterden, son sayfa:<br><br>
-          Müşteri yaşları (portföydeki 47 kişi):<br>
-          38, 41, 44, 44, 46, 47, 47, 48, 49, 51, 51, 52, 52, 53, 54,<br>
-          54, 55, 55, 56, 57, 57, 58, 59, 60, 61, 62, 62, 63, 64, 65...<br>
-          <em>ve devamı. Kenar notta tek bir soru işareti: "Merkez?"</em></p>
-        </div>
+    <div class="dialogue">
+      <p class="speaker">Voss</p>
+      <p>"Bu notu gördün mü?"</p>
+    </div>
 
-        <p>Voss defteri inceledi. Fenwick yaşları sıralamıştı — kendi müşterilerinin yaşlarını, küçükten büyüğe. Sonra durmuştu. "Merkez?" diye sormuştu kendine. Cevabı bulamamış mıydı, yoksa bulduğu cevap onu rahatsız mı etmişti?</p>
+    <div class="dialogue">
+      <p class="speaker">Calloway</p>
+      <p>"Gördüm. Kırk yedi. Muhtemelen müşteri sayısı. Noterdeki dosyada yirmi iki isim var, ama Fenwick'in toplam müşteri portföyü kırk yedi kişiymiş. Albert söyledi."</p>
+    </div>
 
-        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+    <p>Voss düşündü. Yirmi iki kayıt, kırk yedi müşteri. Fenwick neden hepsini yazmamıştı? Bir seçim yapmıştı — bazılarını not etmiş, diğerlerini dışarıda bırakmıştı. Bu seçimin kendisi bile bir veri noktasıydı.</p>
 
-        <p>"Babanız aktüerya hesaplamalarında en çok neyi kullanırdı?" diye sordu Voss, gözlerini defterden kaldırmadan.</p>
+    <h3>Popülasyon ve Örneklem</h3>
 
-        <p>Albert omuz silkti. "Ortalama yaşı. Poliçe primlerini hesaplamak için müşterilerinin tipik yaşını bilmesi gerekirdi."</p>
+    <p>"Kırk yedi kişi," dedi Voss, daha çok kendine söyler gibi. "Bu bir <strong>örneklem</strong>. Londra'daki tüm hayat sigortası müşterilerinden — binlerce, on binlerce kişiden — çekilmiş küçük bir kesit."</p>
 
-        <div class="dialogue">
-          <div class="speaker">Voss</div>
-          <p>"Ortalama mı? Hangi ortalama?"</p>
-        </div>
+    <div class="dialogue">
+      <p class="speaker">Calloway</p>
+      <p>"Yirmi iki kişilik tabloyu kastediyorsun, kırk yedi değil."</p>
+    </div>
 
-        <div class="dialogue">
-          <div class="speaker">Albert</div>
-          <p>"Ne demek istiyorsunuz? Ortalama, ortalamadır."</p>
-        </div>
+    <p>"İkisini de. Kırk yedi kişi Londra popülasyonunun bir örneklemi. Yirmi iki kişilik tablo ise kırk yedinin bir alt örneklemi. Fenwick bir süzgeç kullanmış — dikkatini çeken müşterileri ayırmış."</p>
 
-        <p>Voss kalemini masaya bıraktı. "Hayır," dedi sakin bir sesle. "Ortalama en az üç farklı şey demek olabilir. Ve hangisini kullandığınız, bazen hayat ile ölüm arasındaki fark kadar önemlidir."</p>
+    <p><strong>Popülasyon</strong>, incelemek istediğimiz bütündür — tüm bireyler, tüm olgular. Kırk yediden yola çıkarak tüm Londra hakkında bir şey söyleyemeyiz belki, ama kırk yedinin <em>içindeki örüntüler</em> bize neyin normal, neyin anormal olduğunu gösterebilir. İstatistiğin özü budur: <strong>az ile çok hakkında konuşmak.</strong> Bir avuç gözlemden, çok daha geniş bir gerçekliğe dair çıkarım yapmak.</p>
 
-        <div class="concept-box" data-label="İstatistik Kavramı">
-          <h4>Merkezi Eğilim Ölçüleri: Ortalama, Ortanca, Tepe Değer</h4>
-          <p>Voss bir kâğıt aldı ve yazmaya başladı. Portföydeki kırk yedi müşterinin yaş listesini üç farklı "merkez" ile özetlemek mümkündü:</p>
+    <p>Voss masaya oturdu ve tabloyu önüne açtı. Parmağını satırlar boyunca gezdirdi — her isim, her yaş, her tutar. Sonra durdu.</p>
 
-          <p><strong>Aritmetik Ortalama (Mean):</strong> Tüm değerleri toplayıp sayıya böl.</p>
-          <span class="concept-formula">x̄ = (38 + 41 + 44 + ... + 71) / 47 ≈ 54.3 yaş</span>
+    <p>Son iki satır.</p>
 
-          <p><strong>Ortanca (Medyan):</strong> Sıralandığında tam ortadaki değer. 47 kişide 24. kişinin yaşı.</p>
-          <span class="concept-formula">Medyan = 54 yaş (24. değer)</span>
+    <p>Birinin yanında kırmızı mürekkeple bir çarpı işareti. Diğerinin yanında da.</p>
 
-          <p><strong>Tepe Değer (Mod):</strong> En çok tekrar eden yaş.</p>
-          <span class="concept-formula">Mod = 52 yaş (3 kişi)</span>
+    <p><strong>George Alderton, 62.</strong> Poliçe tutarı: £2.400. Poliçe tarihi: Haziran 1903. Tahmini ölüm yılı: 1912. <em>Gerçek ölüm: Ekim 1903.</em></p>
 
-          <p>Üçü birbirine yakın görünüyor — ama Voss'un asıl ilgilendiği şey bu değildi. İki kırmızı çarpılı müşterinin yaşlarıydı: 62 ve 65. Her ikisi de ortalamanın <em>hayli üzerindeydi.</em></p>
-        </div>
+    <p><strong>William Crane, 65.</strong> Poliçe tutarı: £2.800. Poliçe tarihi: Mayıs 1903. Tahmini ölüm yılı: 1910. <em>Gerçek ölüm: Ekim 1903.</em></p>
 
-        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+    <p>Voss tabloyu bir kez daha okudu. Sonra bir kez daha. Fenwick'in kırmızı çarpılarına baktı — mürekkebin kâğıda basıncından, adamın sinirli olduğu belliydi. Çarpılar düzgün değildi; sert, ani vuruşlarla çizilmişti.</p>
 
-        <p>Albert masanın karşısına oturmuş, Voss'u izliyordu. Adam rakamlarla konuşuyordu sanki — kâğıda eğilmiş, kalemini kâh koyuyor kâh kaldırıyor, zaman zaman dudaklarını kıpırdatıyordu. Nihayet başını kaldırdı.</p>
+    <p>İki adam. İkisi de altmış yaşın üstünde. İkisi de bu sonbaharda ölmüş — Fenwick'in tahmini ölüm tarihlerinden yıllar önce.</p>
 
-        <div class="dialogue">
-          <div class="speaker">Voss</div>
-          <p>"Babanızın portföyündeki müşteriler ağırlıklı olarak elli ile altmış yaş arasında. Ama kırmızı işaretli iki kişi bu grubun en yaşlıları. Bir sigorta acentesi için bu ne anlama gelir?"</p>
-        </div>
+    <div class="scene-break">✦ ✦ ✦</div>
 
-        <div class="dialogue">
-          <div class="speaker">Albert</div>
-          <p>"Daha yüksek risk. Yaşlı müşteriler daha pahalı poliçe taşır. Daha yüksek prim öderler."</p>
-        </div>
+    <h3>Olasılık — Belirsizliğin Dili</h3>
 
-        <div class="dialogue">
-          <div class="speaker">Voss</div>
-          <p>"Ya da... daha çabuk ölürlerse, sigorta şirketi daha erken ödeme yapar. Babanızın bu iki müşteriyle özel bir düzenlemesi var mıydı?"</p>
-        </div>
+    <p>Voss o akşam odasına döndüğünde, masasına oturdu ve defterini açtı. Yazmaya başladı:</p>
 
-        <p>Albert'ın yüzü gerildi. Bir an sessiz kaldı — çok uzun bir sessizlik. Sonra ayağa kalktı ve dolabın üst rafına uzandı. Küçük, deri kaplı bir defter çıkardı. "Bunu size vermek isteyip istemediğimi bilmiyorum," dedi. "Ama sormak zorundaydınız."</p>
+    <div class="document-block">
+      <div class="doc-title">Voss'un defterinden, 5 Kasım 1903 akşamı</div>
+      <em>"İki müşteri aynı sonbaharda öldü. Beklenen ölüm tarihleri çok daha ileriydi. Soru: bu bir tesadüf mü, yoksa bir örüntü mü? Bu soruyu cevaplamak için olasılığa ihtiyacım var — çünkü sezgi, özellikle ölüm söz konusu olduğunda, kötü bir danışmandır."</em>
+    </div>
 
-        <div class="concept-box" data-label="İstatistik Kavramı">
-          <h4>Aykırı Değerler (Outlier) — Ortalamayı Yanıltanlar</h4>
-          <p>Voss defteri açtığında gördüğü şey onu bir an için dondurdu. Fenwick iki müşterisi için ayrı bir sayfa tutmuştu. Yaşları 62 ve 65 — portföyün geri kalanından belirgin biçimde uzak. İstatistik dilinde buna <strong>aykırı değer</strong> denir.</p>
-          <p>Aykırı değerler aritmetik ortalamayı çekerler — tıpkı bir ipin ucundaki ağırlık gibi. Fenwick'in portföyü için şunu düşünün:</p>
-          <span class="concept-formula">Ortalama (tüm liste): 54.3 yaş</span>
-          <span class="concept-formula">Ortalama (bu iki kişi hariç): 52.8 yaş</span>
-          <p>Sadece iki kişi, ortalamayı bir buçuk yıl yukarı çekiyordu. Oysa ortanca neredeyse hiç değişmemişti: 54'ten 53'e. Bu yüzden Voss ortancayı seviyordu — aykırı değerlere dayanıklıydı, ortalama gibi sürüklenmezdi.</p>
-          <p><em>"Bir yalancı, ortalamayı seçer. Dürüst bir istatistikçi, önce dağılımın tamamına bakar."</em></p>
-        </div>
+    <p><strong>Olasılık</strong>, belirsizliği bir sayıya dönüştürme sanatıdır. Bir olayın gerçekleşme şansını 0 ile 1 arasında ifade ederiz:</p>
 
-        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+    <div class="formula">
+      P(A) = A'nın gerçekleşme sayısı &frasl; Toplam mümkün sonuç sayısı
+    </div>
 
-        <p>Deri kaplı defterde iki isim yazıyordu: <strong>George Alderton, 62</strong> ve <strong>William Crane, 65.</strong> Her ikisinin de poliçe tutarları olağandışı yüksekti — o yaştaki müşteriler için piyasa ortalamasının neredeyse iki katı. Ve her ikisi de, Fenwick'in ölümünden tam yirmi gün önce vefat etmişti.</p>
+    <p>Sıfır: imkânsız. Bir: kesin. Aradaki her şey: belirsiz, ama <em>ölçülebilir</em> belirsiz.</p>
 
-        <p>Ama asıl dikkat çekici şey sayfanın altındaydı. Fenwick, her iki ismin yanına küçük harflerle bir not düşmüştü:</p>
+    <p>Voss İngiltere'nin 1901 nüfus sayımını biliyordu — rakamları ezbere değil ama kaynaklarını ezbere bilirdi. Altmış ile yetmiş yaş arasındaki bir İngiliz erkeğinin herhangi bir yıl içinde ölme olasılığı yaklaşık yüzde üçtü. Kırk yedi kişilik portföyde, bir yılda beklenen ölüm sayısı:</p>
 
-        <p style="text-align:center; font-style:italic; color: var(--accent); font-family: 'IM Fell English', serif; font-size:1.1rem; margin: 1.5rem 0;">"Beklenen değil. Erkenden."</p>
+    <div class="formula">
+      47 × 0.03 ≈ 1.4 kişi
+    </div>
 
-        <p>Voss deftere bir süre daha baktı. Sonra kapadı.</p>
+    <p>Bir, belki iki ölüm beklenirdi. İki ölüm, tek başına, istatistiksel olarak şaşırtıcı değildi.</p>
 
-        <p>"Babanız bu iki ölümün zamanlamasını şüpheli bulmuş," dedi Voss sakin bir sesle. "İstatistiksel olarak her ikisi de ölüm olasılığının yüksek olduğu yaştaydı. Ama <em>ne zaman</em> öldükleri beklenenin dışındaydı. Ve babanız bunu yazmış. Sonra babanız da ölmüş."</p>
+    <p>Ama Voss'u durduran şey sayı değildi — <em>zamanlama</em>ydı. İki ölüm aynı ayda, aynı mevsimde, ikisi de beklenen tarihlerden yıllar önce. Bu tesadüfün olasılığı çok daha düşüktü.</p>
 
-        <p>Albert yutkundu.</p>
+    <p>Hesaplamadı. Henüz değil. Daha fazla veriye ihtiyacı vardı.</p>
 
-        <div class="dialogue">
-          <div class="speaker">Voss</div>
-          <p>"Alderton ve Crane'in mirasçıları kim?"</p>
-        </div>
+    <p>Defterine son bir satır ekledi:</p>
 
-        <p>Albert cevap vermedi. Ama cevaplamaması da bir cevaptı.</p>
+    <div class="document-block">
+      <em>"Şüphe kanıt değildir. Ama şüphe, doğru soruyu sormak için gerekli ilk adımdır. Soru: Bu iki ölümü kim, ne zaman, neden bekliyordu?"</em>
+    </div>
 
-        <div class="concept-box" data-label="İstatistik Kavramı">
-          <h4>Beklenen Değer — Ne "Olması Gerekir"?</h4>
-          <p>Fenwick'in notundaki "beklenen değil" ifadesi, istatistiğin en temel sorularından birini işaret ediyordu. <strong>Beklenen değer</strong>, bir olayın uzun vadede ortalama olarak ne çıkacağını söyler.</p>
-          <p>62 yaşında bir İngiliz erkeğinin önümüzdeki yıl içinde ölme olasılığı yaklaşık %2.8'dir. Bu düşük ama sıfır değildir. Peki Alderton neden poliçesini aldıktan yalnızca dört ay sonra öldü? Beklenen süre çok daha uzundu.</p>
-          <span class="concept-formula">E(X) = Σ [ x · P(X = x) ]</span>
-          <p>Fenwick bunu hesaplamıştı. Ve hesap tutmuyordu. Bu onun hayatına mal olmuştu.</p>
-        </div>
+    <p>Kalemini bıraktı. Lambanın ışığı azalıyordu — yağ bitmek üzereydi. Voss kalktı, lambayı söndürdü ve karanlıkta pencereye gitti. Dışarıda Thames'in üstündeki sis hafifçe aydınlanıyordu; bir mavnanın feneri, yavaşça ilerliyordu suyun üstünde.</p>
 
-        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+    <p>Yarın Fenwick'in oğluyla konuşacaktı. Ve sonra, kırmızı çarpıların arkasındaki isimlerin peşine düşecekti.</p>
 
-        <p>Voss Fenwick'in evinden çıktığında hava kararmıştı. Sokak lambaları henüz yakılmamıştı; sis ve alacakaranlık Limehouse'u tanınmaz kılıyordu. Bir süre yürüdü, durdu, sonra geri döndü. Kapıyı tekrar çaldı. Albert şaşkın bir yüzle açtı.</p>
+    <p>Ama o gece, yatağına uzandığında, aklına gelen son düşünce Calloway'in dosyayı uzatırken titreyen parmak uçları oldu. <em>Neden titremişti?</em> Soğuktan olabilirdi. Kasım soğuğu herkesin parmaklarını titretirdi.</p>
 
-        <div class="dialogue">
-          <div class="speaker">Voss</div>
-          <p>"Son bir şey. Alderton ile Crane aynı sigorta şirketiyle mi çalışıyordu?"</p>
-        </div>
+    <p><em>Muhtemelen soğuktan</em>, diye düşündü Voss.</p>
 
-        <div class="dialogue">
-          <div class="speaker">Albert</div>
-          <p>"Evet. Thames Life &amp; Assurance. Babanın en büyük müşterisi."</p>
-        </div>
+    <p>Ve uyudu.</p>
 
-        <p>Voss şapkasını düzeltti. Thames Life &amp; Assurance. İki müşteri beklenenden önce ölmüştü. Sigorta şirketi iki büyük poliçeyi erken ödemek zorunda kalmıştı — ya da tam tersine, kalmamıştı. Her şey kimin lehine olduğuna bağlıydı.</p>
+  </div><!-- /prose -->
 
-        <p>Yanıtlar rakamların içindeydi. Her zaman olduğu gibi. Sadece doğru soruları sormak gerekiyordu.</p>
+  <div class="concepts-box">
+    <h4>Bu Bölümde Geçen Kavramlar</h4>
+    <ul class="concepts-list">
+      <li>Veri &amp; Gözlem</li>
+      <li>Değişken</li>
+      <li>Popülasyon &amp; Örneklem</li>
+      <li>Olasılık</li>
+    </ul>
+  </div>
 
-        <p>Ve Voss sorularını sormaya sabah başlayacaktı.</p>
+  <div class="chapter-end">
+    <div class="ornament">✦ ✦ ✦</div>
+    <div class="chapter-nav">
+      <a href="#hero" class="disabled">← Önceki</a>
+      <a href="#bolum-2">II. Bölüm →</a>
+    </div>
+  </div>
 
-      </div><!-- /story -->
+</article>
 
-      <div class="concept-sidebar">
-        <div class="sidebar-title">Bu Bölümde Geçen Kavramlar</div>
-        <span class="concept-tag">Aritmetik Ortalama</span>
-        <span class="concept-tag">Ortanca (Medyan)</span>
-        <span class="concept-tag">Tepe Değer (Mod)</span>
-        <span class="concept-tag">Aykırı Değer</span>
-        <span class="concept-tag">Beklenen Değer</span>
-        <span class="concept-tag">Merkezi Eğilim</span>
-      </div>
+<hr class="divider">
 
-      <div class="chapter-end">
-        <div class="chapter-end-ornament">— ✦ —</div>
-        <button class="next-chapter-btn" onclick="showChapter(3, document.querySelectorAll('.chapter-btn')[2])">
-          III. Bölüme Geç →
-        </button>
-      </div>
+<!-- ============================================
+     BÖLÜM II — YAKINDA
+     ============================================ -->
+<div class="chapter-coming reveal" id="bolum-2">
+  <div class="coming-icon">✦</div>
+  <p class="chapter-number">İkinci Bölüm</p>
+  <h2 class="coming-title">Merkez Nerededir?</h2>
+  <p class="coming-subtitle">Yakında yayınlanacak</p>
+</div>
 
-    </article>
-  </section>
+<hr class="divider">
 
+<div class="chapter-coming reveal" id="bolum-3">
+  <div class="coming-icon">✦</div>
+  <p class="chapter-number">Üçüncü Bölüm</p>
+  <h2 class="coming-title">Dağılmanın Ölçüsü</h2>
+  <p class="coming-subtitle">Yakında yayınlanacak</p>
+</div>
 
-  <!-- ════ BÖLÜM III ════ -->
-  <section class="chapter" id="chapter-3">
-    <article class="book-page">
+<hr class="divider">
 
-      <header class="chapter-header">
-        <div class="chapter-number">Üçüncü Bölüm</div>
-        <h2 class="chapter-title">Dağılmanın Ölçüsü</h2>
-        <p class="chapter-epigraph">
-          "Bir şeyin ne kadar değişken olduğunu bilmeden,<br>
-          onun hakkında hiçbir şey bilmiyorsunuz demektir."
-          <cite>— Edmund Voss, Kişisel Notlar, 1903</cite>
-        </p>
-      </header>
+<div class="chapter-coming reveal" id="bolum-4">
+  <div class="coming-icon">✦</div>
+  <p class="chapter-number">Dördüncü Bölüm</p>
+  <h2 class="coming-title">Hipotez</h2>
+  <p class="coming-subtitle">Yakında yayınlanacak</p>
+</div>
 
-      <div class="story">
+<hr class="divider">
 
-        <p>Thames Life &amp; Assurance'ın genel müdürlüğü, Cornhill Caddesi'nin köşesinde dikiliyordu — siyah granit cephesi, altın yaldızlı tabelası ve her sabah tam dokuzda açılan ağır meşe kapısıyla. Voss sabah sekiz buçukta oradaydı. Soğuktu; parmak uçları uyuşmuştu ama bunu fark etmiyordu. Elinde Fenwick'in deri kaplı defterinin bir kopyası vardı. Zihninde ise bir soru.</p>
+<div class="chapter-coming reveal" id="bolum-5">
+  <div class="coming-icon">✦</div>
+  <p class="chapter-number">Beşinci Bölüm</p>
+  <h2 class="coming-title">Yanılmanın İki Yüzü</h2>
+  <p class="coming-subtitle">Yakında yayınlanacak</p>
+</div>
 
-        <p>Şirketin arşiv memuru, Voss'u içeriye aldı — müfettiş Calloway'nin imzalı yazısı kapıları açmıştı. Bodrum kattaki arşiv odasında uzun tahta raflar boyunca poliçe dosyaları diziliydi. On yıllık kayıtlar. Binlerce isim. Voss tam olarak ne aradığını biliyordu: Thames Life'ın son beş yıldaki ödeme kayıtları.</p>
+<hr class="divider">
 
-        <div class="clue-card">
-          <p>Thames Life &amp; Assurance — 1898–1903 arası erken ödeme kayıtları:<br><br>
-          1898: 3 erken ödeme — ortalama gecikme: 4.2 ay<br>
-          1899: 2 erken ödeme — ortalama gecikme: 3.8 ay<br>
-          1900: 4 erken ödeme — ortalama gecikme: 5.1 ay<br>
-          1901: 2 erken ödeme — ortalama gecikme: 4.6 ay<br>
-          1902: 1 erken ödeme — ortalama gecikme: 4.9 ay<br>
-          1903: 2 erken ödeme — ortalama gecikme: <strong>0.3 ay</strong></p>
-        </div>
+<div class="chapter-coming reveal" id="bolum-6">
+  <div class="coming-icon">✦</div>
+  <p class="chapter-number">Altıncı Bölüm</p>
+  <h2 class="coming-title">İki Değişken Arasındaki Gölge</h2>
+  <p class="coming-subtitle">Yakında yayınlanacak</p>
+</div>
 
-        <p>Voss tabloyu üç kez okudu. Ortalamalar yıldan yıla değişiyordu — üç buçuk ay ile beş ay arasında. Normal bir dağılım. Ama 1903'teki rakam sanki sayfadan fırlıyordu: <em>0.3 ay.</em> On günden az. Alderton ve Crane, poliçelerini imzaladıktan neredeyse hemen sonra ölmüşlerdi.</p>
+<hr class="divider">
 
-        <p>Bu sadece farklı bir ortalama değildi. Bu, beş yıllık örüntünün tamamen dışındaydı.</p>
+<div class="chapter-coming reveal" id="bolum-7">
+  <div class="coming-icon">✦</div>
+  <p class="chapter-number">Yedinci Bölüm</p>
+  <h2 class="coming-title">Sonuç ve Çıkarım</h2>
+  <p class="coming-subtitle">Yakında yayınlanacak</p>
+</div>
 
-        <div class="concept-box" data-label="İstatistik Kavramı">
-          <h4>Varyans ve Standart Sapma — Dağılmanın Dili</h4>
-          <p>Voss kâğıdını çıkardı. Ortalama tek başına yetmiyordu — <em>değerlerin ortalamadan ne kadar saptığını</em> da bilmek gerekiyordu. Buna <strong>varyans</strong> denir.</p>
-          <span class="concept-formula">s² = Σ(xᵢ − x̄)² / (n−1)</span>
-          <p>Beş yıllık gecikme sürelerinin ortalaması yaklaşık 4.5 aydı. Her yılın değeri bu ortalamaya oldukça yakındı — varyans düşüktü, dağılım dardı. Ama 1903'teki 0.3 ay bu tabloya girdiğinde varyans aniden patladı.</p>
-          <p>Pratikte varyansın karekökü daha kolay yorumlanır — buna <strong>standart sapma</strong> denir:</p>
-          <span class="concept-formula">s = √s²</span>
-          <p>Voss hesapladı: beş yıllık standart sapma yaklaşık 0.6 aydı. Yani "normal" bir değer 4.5 ± 0.6 ay arasında olurdu. 0.3 ay ise bu aralığın yedi standart sapma uzağındaydı.</p>
-          <p><em>Yedi standart sapma. İstatistikte bu bir mucize değil, bir sinyal demektir.</em></p>
-        </div>
+<!-- ============================================
+     FOOTER
+     ============================================ -->
+<footer class="site-footer">
+  <p>Sayıların Gölgesinde — Bir İstatistik Romanı</p>
+  <p style="margin-top:0.3rem;">Edmund Voss'un macerası devam edecek.</p>
+</footer>
 
-        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
-
-        <p>Arşiv memuru kapıya yaslanmış, Voss'u izliyordu. Adam saatlerce orada oturmuş, hesap yapıyordu. Öğle vakti geldiğinde memur bir şeyler söylemek istedi ama Voss'un yüzündeki ifade onu durdurdu — o ifade, bir şeyin tam yerine oturduğu andaki ifadeydi.</p>
-
-        <p>Voss kalktı. Dosyaların üzerine son bir kez baktı, sonra dışarı çıktı. Merdivenleri çıkarken zihninde tek bir soru dönüyordu: bu kadar düşük bir sapma <em>nasıl</em> mümkündü? Hayat, doğası gereği düzensizdir. İnsanlar öngörülemeyen zamanlarda ölür. Ama Alderton ve Crane neredeyse terazi hassasiyetiyle, tam "gerektiği" anda ölmüşlerdi.</p>
-
-        <p>Tesadüf bu kadar hassas olamaz.</p>
-
-        <div class="concept-box" data-label="İstatistik Kavramı">
-          <h4>Normal Dağılım ve "Olağandışı" Nedir?</h4>
-          <p>Doğadaki pek çok değişken <strong>normal dağılım</strong> gösterir — çan eğrisi şeklinde, ortalamanın etrafında simetrik olarak yığılır. Sigorta ödemeleri de böyledir: çoğu ödeme ortalamaya yakın zamanlarda gerçekleşir, çok erken ya da çok geç ödemeler nadirdir.</p>
-          <p>Normal dağılımda şu kural geçerlidir:</p>
-          <span class="concept-formula">%68 → ortalama ± 1 standart sapma</span>
-          <span class="concept-formula">%95 → ortalama ± 2 standart sapma</span>
-          <span class="concept-formula">%99.7 → ortalama ± 3 standart sapma</span>
-          <p>Voss'un bulduğu değer 7 standart sapma uzaktaydı. Böyle bir olayın rastlantısal gerçekleşme olasılığı, milyarda birden küçüktür. İstatistik bunu "imkânsız" demez — ama "bu bir tesadüf değildir" der.</p>
-        </div>
-
-        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
-
-        <p>Calloway onu öğleden sonra ofisinde bekliyordu. Voss masaya oturdu ve hesaplarını tek tek anlattı. Calloway dinledi — önce sabırsızca, sonra giderek daha dikkatli bir yüzle.</p>
-
-        <div class="dialogue">
-          <div class="speaker">Calloway</div>
-          <p>"Yani iki adamın ölüm zamanlaması olağandışı. Bu bize cinayeti kanıtlamıyor, Voss."</p>
-        </div>
-
-        <div class="dialogue">
-          <div class="speaker">Voss</div>
-          <p>"Hayır. Ama hangi soruyu sormamız gerektiğini söylüyor. Alderton ve Crane'in ortak noktası ne? Kim bu ölümlerden kazanç sağladı? Ve Fenwick neden tam bu noktada durdu?"</p>
-        </div>
-
-        <div class="dialogue">
-          <div class="speaker">Calloway</div>
-          <p>"Thames Life, her iki poliçeden de ödemek zorunda kaldı. Yani şirket zararda."</p>
-        </div>
-
-        <div class="dialogue">
-          <div class="speaker">Voss</div>
-          <p>"Ya da şirketin içindeki biri, bu ölümlerden başka bir yoldan kazanç sağladı. Rakamlar bize 'kim' değil, 'nasıl' sorusunu sorduruyor. Bu önemli bir fark."</p>
-        </div>
-
-        <p>Calloway iskemlesinde geriye yaslandı. "Peki sıradaki adım?"</p>
-
-        <p>Voss pencereye döndü. Dışarıda Thames görünüyordu — gri, sessiz, her şeyi bilen. "Alderton ve Crane'in ölüm belgelerini isteyeceğiz," dedi. "Doktorların isimlerini. Ve Thames Life'ın 1903 primlerini kimin imzaladığını."</p>
-
-        <p>Durdu.</p>
-
-        <p>"Bir de şunu: Fenwick'in son haftasında kiminle görüştüğünü."</p>
-
-        <div class="concept-box" data-label="İstatistik Kavramı">
-          <h4>Korelasyon — İki Şeyin Birlikte Hareketi</h4>
-          <p>Voss aklının bir köşesinde yeni bir fikir biçimlendiğini hissediyordu. Alderton ve Crane'in ölümleri ile Fenwick'in ölümü arasında bir <strong>korelasyon</strong> vardı — üç olay birbirine yakın zamanda, birbirine bağlı kişiler etrafında gerçekleşmişti.</p>
-          <p>Korelasyon, iki değişkenin birlikte değişip değişmediğini ölçer. −1 ile +1 arasında bir değer alır:</p>
-          <span class="concept-formula">r = +1 → tam pozitif ilişki</span>
-          <span class="concept-formula">r = 0  → ilişki yok</span>
-          <span class="concept-formula">r = −1 → tam negatif ilişki</span>
-          <p>Ama Voss iyi bilirdi: <em>korelasyon, nedensellik değildir.</em> İki şeyin birlikte hareket etmesi, birinin diğerine yol açtığı anlamına gelmez. Bunu kanıtlamak için daha fazla veriye — ve daha fazla soruya — ihtiyaç vardı.</p>
-        </div>
-
-        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
-
-        <p>O gece Voss odasına döndüğünde masasına oturdu ve defterine yazdı. Sayılar artık bir şekil almıştı zihninde — belirsiz bir şekil, ama yine de bir şekil. Üç ölüm, bir şirket, bir portföy ve ortalamanın yedi standart sapma uzağındaki bir değer.</p>
-
-        <p>Matematiksel olarak bu bir anomaliydi. Dedektiflik açısından ise bir kapıydı.</p>
-
-        <p>Kapının arkasında kimin durduğunu öğrenmek için içeri girmek gerekiyordu.</p>
-
-        <p>Voss kalemini bıraktı, lambasını söndürdü ve ilk kez üç gündür rahat bir nefes aldı. Çünkü artık biliyordu: sayılar yalan söylemez. İnsanlar söyler. Ve sayılar, insanların yalanlarını er ya da geç ele verirdi.</p>
-
-      </div><!-- /story -->
-
-      <div class="concept-sidebar">
-        <div class="sidebar-title">Bu Bölümde Geçen Kavramlar</div>
-        <span class="concept-tag">Varyans</span>
-        <span class="concept-tag">Standart Sapma</span>
-        <span class="concept-tag">Normal Dağılım</span>
-        <span class="concept-tag">Anomali / Aykırı Gözlem</span>
-        <span class="concept-tag">Korelasyon</span>
-        <span class="concept-tag">Nedensellik ≠ Korelasyon</span>
-      </div>
-
-      <div class="chapter-end">
-        <div class="chapter-end-ornament">— ✦ —</div>
-        <button class="next-chapter-btn" onclick="showChapter(4, document.querySelectorAll('.chapter-btn')[3])">
-          IV. Bölüme Geç →
-        </button>
-      </div>
-
-    </article>
-  </section>
-
-
-  <!-- ════ BÖLÜM IV ════ -->
-  <section class="chapter" id="chapter-4">
-    <article class="book-page">
-
-      <header class="chapter-header">
-        <div class="chapter-number">Dördüncü Bölüm</div>
-        <h2 class="chapter-title">Hipotez</h2>
-        <p class="chapter-epigraph">
-          "Bir şüpheliyi bulmak kolaydır.<br>
-          Haklı olduğunuzu kanıtlamak ise bambaşka bir bilimdir."
-          <cite>— Edmund Voss, Kişisel Notlar, 1903</cite>
-        </p>
-      </header>
-
-      <div class="story">
-
-        <p>Ölüm belgelerini Calloway getirmişti — iki adet, sarı zarflı, resmi mühürlü. Voss zarfları açmadan önce bir an tuttu elinde. Her belge bir hayatın son cümlesi gibiydi; bunlara acele davranmak doğru gelmemişti hiçbir zaman. Sonra açtı.</p>
-
-        <p>George Alderton, 62. Ölüm sebebi: miyokard enfarktüsü. İmzalayan doktor: <strong>Dr. Silas Pemberton.</strong></p>
-
-        <p>William Crane, 65. Ölüm sebebi: kardiyak yetmezlik. İmzalayan doktor: <strong>Dr. Silas Pemberton.</strong></p>
-
-        <p>Voss belgeleri yan yana koydu ve uzaklaşarak baktı. İki farklı adam, iki farklı adres, iki farklı tarih. Ama aynı doktor. Ve Thames Life & Assurance'ın 1903 primlerini imzalayan isim — Calloway'in bir gün önce getirdiği kayda göre — yine aynıydı: <strong>Silas Pemberton.</strong> Şirketin tıbbi danışmanıydı.</p>
-
-        <div class="clue-card">
-          <p>Calloway'in notu, 8 Kasım 1903:<br><br>
-          "Dr. Silas Pemberton — Thames Life tıbbi danışmanı, 1899'dan beri.<br>
-          Alderton poliçesi: Pemberton imzası.<br>
-          Crane poliçesi: Pemberton imzası.<br>
-          Fenwick'in son haftasında görüştüğü kişiler listesi: Pemberton adı geçiyor,<br>
-          4 Kasım Çarşamba, öğleden sonra. Fenwick iki gün sonra ölmüş."</p>
-        </div>
-
-        <p>Odada sessizlik çöktü. Calloway iskemlesinde öne eğilmişti, dirsekleri dizlerinde. Voss hâlâ belgelere bakıyordu.</p>
-
-        <div class="dialogue">
-          <div class="speaker">Calloway</div>
-          <p>"Bu yeterli değil mi? Aynı adam, üç ölüm, üç imza."</p>
-        </div>
-
-        <div class="dialogue">
-          <div class="speaker">Voss</div>
-          <p>"Yeterli mi? Calloway, bu bir korelasyon. Pembert'on her üç vakada da mevcut — ama bu onun suçlu olduğunu kanıtlamaz. Londra'nın tıbbi danışmanları sınırlı sayıda. Belki de sadece popüler biri."</p>
-        </div>
-
-        <div class="dialogue">
-          <div class="speaker">Calloway</div>
-          <p>"İçinizden de şüpheleniyorsunuz."</p>
-        </div>
-
-        <div class="dialogue">
-          <div class="speaker">Voss</div>
-          <p>"Evet. Ama şüphe ile kanıt arasındaki mesafeyi istatistik ölçer. Bana Pemberton'ın imzaladığı tüm ölüm belgelerini getirin — 1899'dan bu yana. Sayılar konuşacak."</p>
-        </div>
-
-        <div class="concept-box" data-label="İstatistik Kavramı">
-          <h4>Hipotez Testi — Şüpheyi Sayıya Dökmek</h4>
-          <p>Voss o gece masasına oturdu ve bir istatistikçinin en güçlü silahını kurdu: <strong>hipotez testi.</strong></p>
-          <p>Fikir basittir: önce "hiçbir şey olmadığını" varsayarsınız — buna <strong>sıfır hipotezi (H₀)</strong> denir. Sonra verinizin bu varsayımla ne kadar çeliştiğini ölçersiniz.</p>
-          <span class="concept-formula">H₀: Pemberton'ın vakalarındaki erken ölüm oranı, diğer doktorlardan farklı değildir.</span>
-          <span class="concept-formula">H₁: Pemberton'ın vakalarında erken ölüm oranı anlamlı biçimde yüksektir.</span>
-          <p>Eğer veri H₀'ı çürütecek kadar güçlüyse — yani gözlemlenen örüntünün rastlantıyla açıklanma ihtimali çok küçükse — H₀ reddedilir. Buna <strong>istatistiksel anlamlılık</strong> denir.</p>
-          <p><em>Mahkeme "makul şüphenin ötesinde" kanıt ister. İstatistik ise bunu sayıyla ifade eder.</em></p>
-        </div>
-
-        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
-
-        <p>Calloway kayıtları iki günde getirdi. Pemberton 1899'dan bu yana Thames Life için kırk üç poliçe onaylamıştı. Voss bunları tek tek inceledi; her poliçenin yanına ödeme tarihini, müşterinin yaşını ve poliçe imza tarihini yazdı. Gece geç vakta, mum ışığında, tablo tamamlandı.</p>
-
-        <p>Kırk üç vakadan sekizi "erken ödeme" içeriyordu — yani müşteri poliçeyi imzaladıktan altı ay içinde ölmüştü. Londra genelinde bu oran binde ikiydi. Pemberton'ın vakalarında ise —</p>
-
-        <span class="concept-formula" style="display:block; text-align:center; margin: 1rem 2rem;">8 / 43 ≈ %18.6</span>
-
-        <p>Yüzde on sekiz. Beklenenin doksan katı.</p>
-
-        <div class="concept-box" data-label="İstatistik Kavramı">
-          <h4>p-Değeri — "Bu Tesadüf Olabilir mi?"</h4>
-          <p>Voss hesaplarını kontrol etti, sonra bir kez daha kontrol etti. Bulduğu şeyi <strong>p-değeri</strong> olarak ifade etti — gözlemlenen örüntünün, eğer H₀ doğruysa, salt rastlantıyla ortaya çıkma olasılığı.</p>
-          <p>p-değeri küçüldükçe, verimiz sıfır hipoteziyle daha çok çelişir. Bilimde genel eşik şöyledir:</p>
-          <span class="concept-formula">p &lt; 0.05 → istatistiksel olarak anlamlı</span>
-          <span class="concept-formula">p &lt; 0.01 → güçlü kanıt</span>
-          <span class="concept-formula">p &lt; 0.001 → çok güçlü kanıt</span>
-          <p>Voss'un hesabına göre Pemberton'ın oranı için p-değeri 0.000003'ün altındaydı. Yani bu örüntünün tesadüfen oluşma ihtimali milyonda üçten azdı.</p>
-          <p><em>İstatistik "suçlu" demez. Ama "bu tesadüf değildir" der — ve bazen bu yeterlidir.</em></p>
-        </div>
-
-        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
-
-        <p>Sabah yedide Calloway'i uyandırdı. Kapı zili sesiyle gözlerini açan müfettiş, Voss'u eşiğinde görünce şaşırdı — adam üç günlük sakal bırakmış, gözlerinin altında halkalar oluşmuştu ama yüzünde tuhaf, sakin bir ifade vardı.</p>
-
-        <div class="dialogue">
-          <div class="speaker">Voss</div>
-          <p>"Pemberton'ı gözaltına alın."</p>
-        </div>
-
-        <div class="dialogue">
-          <div class="speaker">Calloway</div>
-          <p>"Rakamlar mı söylüyor bunu?"</p>
-        </div>
-
-        <div class="dialogue">
-          <div class="speaker">Voss</div>
-          <p>"Rakamlar, bu örüntünün tesadüf olmadığını milyonda üç ihtimalle söylüyor. Geri kalan araştırmanızın işi. Ama araştırmak için önce durdurmak gerekir."</p>
-        </div>
-
-        <p>Calloway bir an düşündü. Sonra ceketini aldı.</p>
-
-        <div class="concept-box" data-label="İstatistik Kavramı">
-          <h4>Tip I ve Tip II Hata — Yanılmanın İki Yüzü</h4>
-          <p>Voss kapıda durdu. "Bir şey daha," dedi. "Yanılıyor da olabilirim."</p>
-          <p>Calloway döndü. "Ne?"</p>
-          <p>"Her hipotez testinde iki tür hata vardır. <strong>Tip I hata:</strong> masum birine suçlu demek — H₀ doğruyken reddetmek. <strong>Tip II hata:</strong> suçluyu serbest bırakmak — H₀ yanlışken reddetmemek."</p>
-          <span class="concept-formula">Tip I Hata (α): H₀ doğruyken reddetmek → "Masum kişiyi mahkûm etmek"</span>
-          <span class="concept-formula">Tip II Hata (β): H₀ yanlışken reddetmemek → "Suçluyu serbest bırakmak"</span>
-          <p>"p &lt; 0.000003 ile Pemberton'a Tip I hata yapma ihtimalim son derece düşük. Ama sıfır değil. Bu yüzden siz soruşturun — ben sadece nereye bakacağınızı söyledim."</p>
-          <p>Calloway dışarı çıkarken mırıldandı: <em>"Rakamlar bile kendinizi garantiye alıyor."</em></p>
-          <p>Voss gülümsedi. "Rakamlar asla tam garanti vermez. Ama en dürüst şahitlerdir."</p>
-        </div>
-
-        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
-
-        <p>Dr. Silas Pemberton o öğleden sonra gözaltına alındı. Üzerinde Thames Life & Assurance'a ait bir dizi belge çıktı; Alderton ve Crane'in mirasçılarıyla yapılmış gizli bir anlaşmayı gösteren mektuplar. Yüksek primli poliçeler imzalanmış, erken ölüm sağlanmış, mirasçılar tazminatın bir kısmını Pemberton'a aktarmıştı. Fenwick bu düzeni fark etmiş; Pemberton'la yüzleşmeye gitmiş; bir daha dönmemişti.</p>
-
-        <p>Calloway mahkeme sürecini Voss'a aktardığında tek bir şey sordu: "Siz hiç yanılır mısınız?"</p>
-
-        <p>Voss pencereye döndü. Thames aynı renkteydi — gri, sabırlı, her şeyi bilen.</p>
-
-        <p>"Her zaman yanılabilirim," dedi. "Ama olasılık beni doğru yönde tutmak için var. Kesinlik bir lüks. Belirsizliği yönetmek ise bir bilim."</p>
-
-        <p>Masasına döndü. Yeni bir dosya bekliyordu.</p>
-
-        <p>Rakamlar her zaman bekliyordu.</p>
-
-      </div><!-- /story -->
-
-      <div class="concept-sidebar">
-        <div class="sidebar-title">Bu Bölümde Geçen Kavramlar</div>
-        <span class="concept-tag">Hipotez Testi</span>
-        <span class="concept-tag">H₀ Sıfır Hipotezi</span>
-        <span class="concept-tag">H₁ Alternatif Hipotez</span>
-        <span class="concept-tag">p-Değeri</span>
-        <span class="concept-tag">İstatistiksel Anlamlılık</span>
-        <span class="concept-tag">Tip I Hata</span>
-        <span class="concept-tag">Tip II Hata</span>
-      </div>
-
-      <div class="chapter-end">
-        <div class="chapter-end-ornament">— ✦ —</div>
-        <button class="next-chapter-btn" onclick="showChapter(5, document.querySelectorAll('.chapter-btn')[4])">
-          V. Bölüme Geç →
-        </button>
-        <p class="coming-soon">V. Bölüm: <em>"İki Değişken Arasındaki Gölge"</em></p>
-      </div>
-
-    </article>
-  </section>
-
-  <!-- ════ BÖLÜM V ════ -->
-  <section class="chapter" id="chapter-5">
-    <article class="book-page">
-
-      <header class="chapter-header">
-        <div class="chapter-number">Beşinci Bölüm</div>
-        <h2 class="chapter-title">İki Değişken Arasındaki Gölge</h2>
-        <p class="chapter-epigraph">
-          "İki şeyin birlikte hareket etmesi,<br>
-          birinin diğerini neden hareket ettirdiği anlamına gelmez.<br>
-          Ama bazen — sadece bazen — gelir."
-          <cite>— Edmund Voss, Kişisel Notlar, 1903</cite>
-        </p>
-      </header>
-
-      <div class="story">
-
-        <p>Thames Life & Assurance'ın genel müdürü Reginald Holt, Voss'u beklediği belli olan bir adamın soğukluğuyla karşıladı. Kırk sekiz yaşında, gümüş saçlı, kollarını masanın üzerinde birleştirmiş, sanki kendi ofisinde değil bir mahkemede oturuyormuş gibi dikkatle seçilmiş bir duruşu vardı. Voss içeri girdiğinde ayağa kalkmadı.</p>
-
-        <p>"Bay Voss," dedi Holt, sesi çok kontrollüydü. "Müfettiş Calloway sizi önceden haber verdi. İki müşterimizin talihsiz kaybından dolayı üzgünüz. Ama bunun bir soruşturmayı gerektirdiğini anlamıyorum."</p>
-
-        <p>"Anlamazsınız," dedi Voss, oturmadan. "Çünkü rakamlarınızı henüz görmediniz."</p>
-
-        <p>Çantasından iki sayfa çıkardı. Birincisi Thames Life'ın son üç yılına ait ödeme kayıtlarıydı — Calloway'in mahkeme kararıyla aldığı belgeler. İkincisi Voss'un kendi hesapladığı bir tablo. Masaya koydu, ikisini yan yana.</p>
-
-        <div class="clue-card">
-          <p>Thames Life & Assurance — Son 3 yıl, 60 yaş üstü poliçe ödemeleri:<br><br>
-          Poliçe yaşı (ay) → Ödeme tutarı (£):<br>
-          4 ay → £2.400 &nbsp;|&nbsp; 5 ay → £2.200 &nbsp;|&nbsp; 4 ay → £2.600<br>
-          6 ay → £2.100 &nbsp;|&nbsp; 3 ay → £2.800 &nbsp;|&nbsp; 5 ay → £2.300<br>
-          <em>Voss'un notu kenar boşluğunda: "Poliçe ne kadar kısa, ödeme o kadar yüksek. Tesadüf mü?"</em></p>
-        </div>
-
-        <p>Holt tabloya baktı. Sonra Voss'a. "Bu rakamlar ne gösteriyor size?"</p>
-
-        <p>"Bir ilişki," dedi Voss. "Poliçenin yaşı azaldıkça ödeme tutarı artıyor. Ya da tersinden bakarsak: büyük tutarlı poliçeler, çok kısa süre içinde ödeme gerektiriyor. Bu bir korelasyon."</p>
-
-        <div class="concept-box" data-label="İstatistik Kavramı">
-          <h4>Korelasyon — İki Değişken Birlikte Dans Eder</h4>
-          <p><strong>Korelasyon</strong>, iki sayısal değişkenin birlikte nasıl değiştiğini ölçer. -1 ile +1 arasında bir sayıyla ifade edilir.</p>
-          <span class="concept-formula">r = +1 → Biri artınca diğeri tam artar</span>
-          <span class="concept-formula">r = −1 → Biri artınca diğeri tam azalır</span>
-          <span class="concept-formula">r = 0 &nbsp;→ İlişki yok</span>
-          <p>Thames Life'ın verisinde Voss r = −0.87 hesaplamıştı. Güçlü, negatif bir korelasyon. Poliçe süresi uzadıkça ödeme miktarı düşüyor — ya da daha doğrusu, kısa sürede ölen müşteriler yüksek tutarlı poliçe taşıyor.</p>
-          <p>Ama Voss burada durdu. Çünkü korelasyonun altın kuralını biliyordu:</p>
-          <p style="font-style:italic; color: var(--accent);">"Korelasyon, nedensellik değildir."</p>
-          <p>İki şeyin birlikte hareket etmesi, birinin diğerine yol açtığı anlamına gelmez. Bunu kanıtlamak için bir adım daha gerekirdi.</p>
-        </div>
-
-        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
-
-        <p>Holt kollarını çözdü. Küçük bir hareketti ama Voss gördü — insanlar gergin olduklarında en önce omuzları değil, dirsekleri bırakır. "Korelasyon," dedi Holt sesi hafifçe değişmiş halde. "Bu kelimeyi biliyorum. Sigorta sektöründe her şey korelasyonla çalışır. Bu sizi nereye götürüyor?"</p>
-
-        <p>"Regresyona," dedi Voss.</p>
-
-        <div class="concept-box" data-label="İstatistik Kavramı">
-          <h4>Basit Doğrusal Regresyon — Geleceği Okumak</h4>
-          <p>Korelasyon "ilişki var mı?" diye sorar. <strong>Regresyon</strong> ise "bu ilişkiyi kullanarak tahmin yapabilir miyim?" diye sorar. En basit haliyle:</p>
-          <span class="concept-formula">Ŷ = β₀ + β₁X</span>
-          <p>Burada X bağımsız değişken (poliçe yaşı, ay olarak), Ŷ tahmin edilen değer (beklenen ödeme), β₀ sabit (kesim noktası) ve β₁ eğimdir (X bir birim artınca Ŷ ne kadar değişir).</p>
-          <p>Voss Thames Life verisinden şunu bulmuştu:</p>
-          <span class="concept-formula">Ödeme (£) = 3.100 − 180 × Poliçe_Yaşı (ay)</span>
-          <p>Yani her geçen ay, beklenen ödeme 180 sterlin düşüyor. Ve 3 aylık poliçede beklenen ödeme: 3.100 − 540 = <strong>£2.560.</strong></p>
-          <p>Gerçek ödeme: <strong>£2.800.</strong> Beklenenden yüksek. Alderton ve Crane'in poliçeleri de 4 ve 5 aylıktı — ve her ikisi de regresyon çizgisinin <em>üstünde</em> duruyordu. İstatistik dilinde buna <strong>artık (residual)</strong> denir: gerçek değer ile tahmin arasındaki fark.</p>
-          <p>Büyük artık = beklenmedik durum = soruşturulması gereken şey.</p>
-        </div>
-
-        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
-
-        <p>Voss ikinci sayfayı masaya sürdü. Bu sefer sadece iki nokta vardı üzerinde — bir koordinat düzleminde. Yatay eksende poliçe yaşı, dikey eksende ödeme tutarı. Bütün diğer noktalar ince bir çizginin yakınında kümelenmişti. Sadece iki nokta çizginin çok uzağındaydı. İki nokta yukarıda, sağ üst köşeye doğru fırlayan iki nokta.</p>
-
-        <p>"Alderton," dedi Voss, sol noktayı işaret ederek. "Crane," dedi, sağdakini göstererek. "Her ikisi de regresyon çizgisinin dışında. Her ikisi de beklenenin üstünde ödeme gerektirdi. Ve her ikisi de poliçelerini aldıktan çok kısa süre sonra öldü."</p>
-
-        <p>Holt masadan kalktı. Pencereye yürüdü, Thames'e baktı. Uzun bir sessizlik oldu — o tür bir sessizlik ki, içinde bir itirafın piştiği hissediliyordu.</p>
-
-        <div class="dialogue">
-          <div class="speaker">Holt</div>
-          <p>"Ne istiyorsunuz, Bay Voss?"</p>
-        </div>
-
-        <div class="dialogue">
-          <div class="speaker">Voss</div>
-          <p>"Üçüncü noktanın adını."</p>
-        </div>
-
-        <p>Holt döndü. Yüzü griydi artık, gümüş saçlarıyla neredeyse bütünleşmişti. "Ne üçüncü noktası?"</p>
-
-        <p>"Fenwick," dedi Voss. "O da bu çizginin dışında olurdu. Eğer yaşasaydı."</p>
-
-        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
-
-        <p>Calloway akşam üzeri Thames Life'ın ofisine iki dedektifle geldi. Holt direnmedi. Masanın çekmecesinden küçük, siyah bir defter çıkardı ve Calloway'e uzattı — hiç konuşmadan. İçinde üç isim yazıyordu: Alderton, Crane, Fenwick. Yanlarında tarihler ve tutarlar. Ve her birinin karşısında aynı iki kelime:</p>
-
-        <p style="text-align:center; font-style:italic; color: var(--accent); font-family: 'IM Fell English', serif; font-size:1.15rem; margin: 1.8rem 0;">"Düzenlendi. Ödendi."</p>
-
-        <p>Voss dışarı çıktığında hava kararmıştı yine. Ama bu sefer sis yoktu — garip bir netlik vardı Londra üzerinde, sanki şehir de sonunda nefes vermişti. Yürürken defterine baktı. Son sayfada kendi el yazısıyla şu satırlar duruyordu:</p>
-
-        <p><em>İki değişken arasındaki ilişkiyi buldun. Ama ilişki, suçu kanıtlamaz. Suçu kanıtlayan şey, ilişkiyi kimin kullandığı ve nasıl kullandığıdır. İstatistik ancak buraya kadar gider. Gerisi, insanın işidir.</em></p>
-
-        <p>Defteri kapattı. Cebine koydu. Ve Thames'in karşı kıyısındaki ışıklara bakarak yürümeye devam etti.</p>
-
-        <div class="concept-box" data-label="İstatistik Kavramı">
-          <h4>Korelasyon ≠ Nedensellik — Son Bir Not</h4>
-          <p>Thames Life vakası kapanmıştı. Ama Voss'un aklında bir şey kalmıştı: regresyon çizgisi suçu göstermemişti. Sadece <em>nerede bakılması gerektiğini</em> göstermişti.</p>
-          <p>İstatistik tam olarak budur: veriyi anlayıp doğru soruyu sormak. Korelasyon yüksek olabilir ama neden-sonuç ilişkisi kurabilmek için ek kanıt, mantık ve bağlam gerekir. Buz dondurma satışları ile boğulma vakaları arasında güçlü pozitif korelasyon vardır — ikisi de yaz aylarında artar. Ama biri diğerine neden olmaz.</p>
-          <span class="concept-formula">Korelasyon: "Birlikte hareket ediyorlar."</span>
-          <span class="concept-formula">Nedensellik: "Biri diğerine yol açıyor."</span>
-          <p>Voss her vakada önce korelasyonu arardı. Sonra nedenselliği. İkincisi için ise istatistikten çok daha fazlası gerekiyordu.</p>
-        </div>
-
-      </div><!-- /story -->
-
-      <div class="concept-sidebar">
-        <div class="sidebar-title">Bu Bölümde Geçen Kavramlar</div>
-        <span class="concept-tag">Korelasyon</span>
-        <span class="concept-tag">Korelasyon Katsayısı (r)</span>
-        <span class="concept-tag">Basit Doğrusal Regresyon</span>
-        <span class="concept-tag">Bağımsız / Bağımlı Değişken</span>
-        <span class="concept-tag">Artık (Residual)</span>
-        <span class="concept-tag">Korelasyon ≠ Nedensellik</span>
-      </div>
-
-      <div class="chapter-end">
-        <div class="chapter-end-ornament">— ✦ FİNAL ✦ —</div>
-        <p class="coming-soon" style="font-size: 1.05rem; margin-top: 0.5rem; color: var(--ink-faded);">
-          <em>"Sayıların Gölgesinde" tamamlandı.</em><br><br>
-          Edmund Voss'un yeni vakası yakında...
-        </p>
-      </div>
-
-    </article>
-  </section>
-
-</main>
-
+<!-- ============================================
+     JAVASCRIPT
+     ============================================ -->
 <script>
-function showChapter(n, btn) {
-  // hide all
-  document.querySelectorAll('.chapter').forEach(c => c.classList.remove('active'));
-  document.querySelectorAll('.chapter-btn').forEach(b => b.classList.remove('active'));
-  // show selected
-  const target = document.getElementById('chapter-' + n);
-  if (target) {
-    target.classList.add('active');
-    btn.classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-}
+(function() {
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  reveals.forEach(el => revealObserver.observe(el));
+
+  // Sticky nav
+  const hero = document.getElementById('hero');
+  const stickyNav = document.getElementById('stickyNav');
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      stickyNav.classList.toggle('visible', !entry.isIntersecting);
+    });
+  }, { threshold: 0 });
+  navObserver.observe(hero);
+
+  // Progress bar
+  const progressBar = document.getElementById('progressBar');
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = progress + '%';
+  });
+
+  // Highlight current chapter in sticky nav
+  const chapters = document.querySelectorAll('.chapter, .chapter-coming');
+  const navLinks = document.querySelectorAll('.sticky-nav .nav-chapters a');
+  const chapterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navLinks.forEach(link => {
+          link.classList.remove('current');
+          if (link.getAttribute('href') === '#' + id) {
+            link.classList.add('current');
+          }
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+  chapters.forEach(ch => chapterObserver.observe(ch));
+})();
 </script>
+
 </body>
 </html>
