@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sayıların Gölgesinde — İstatistik Romanı</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=IM+Fell+English:ital@0;1&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1008;
+    --ink-faded: #3d2b1a;
+    --paper: #f5ead6;
+    --paper-dark: #e8d5b0;
+    --paper-darker: #d4bb8a;
+    --accent: #8b2500;
+    --accent-gold: #c8922a;
+    --concept-bg: #f0e4c8;
+    --concept-border: #8b6914;
+    --shadow: rgba(26,16,8,0.25);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #2a1a08;
+    font-family: 'Crimson Text', Georgia, serif;
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* Paper texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--ink);
+    padding: 2rem 0 1.5rem;
+    text-align: center;
+    border-bottom: 3px double var(--accent-gold);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 2px, rgba(200,146,42,0.03) 2px, rgba(200,146,42,0.03) 4px
+    );
+  }
+
+  .header-ornament {
+    color: var(--accent-gold);
+    font-size: 1.1rem;
+    letter-spacing: 0.4em;
+    margin-bottom: 0.5rem;
+    font-family: 'IM Fell English', serif;
+    opacity: 0.8;
+  }
+
+  .site-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 900;
+    color: var(--paper);
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+  }
+
+  .site-subtitle {
+    color: var(--accent-gold);
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    margin-top: 0.4rem;
+    letter-spacing: 0.05em;
+  }
+
+  .header-rule {
+    width: 200px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--accent-gold), transparent);
+    margin: 1rem auto 0;
+  }
+
+  /* ── NAV / CHAPTER LIST ── */
+  .chapter-nav {
+    background: var(--paper-dark);
+    border-bottom: 2px solid var(--paper-darker);
+    padding: 0.75rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+
+  .chapter-nav-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .nav-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-faded);
+    margin-right: 0.5rem;
+  }
+
+  .chapter-btn {
+    background: none;
+    border: 1px solid var(--paper-darker);
+    color: var(--ink-faded);
+    font-family: 'IM Fell English', serif;
+    font-size: 0.9rem;
+    padding: 0.3rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .chapter-btn:hover, .chapter-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--paper);
+  }
+
+  .chapter-btn.locked {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 6rem;
+  }
+
+  /* ── CHAPTER PANEL ── */
+  .chapter {
+    display: none;
+    animation: pageReveal 0.6s ease forwards;
+  }
+
+  .chapter.active { display: block; }
+
+  @keyframes pageReveal {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── NEWSPAPER/BOOK PAGE ── */
+  .book-page {
+    background: var(--paper);
+    box-shadow: 
+      0 1px 0 var(--paper-darker) inset,
+      4px 4px 0 var(--paper-darker),
+      8px 8px 0 rgba(0,0,0,0.1),
+      0 20px 60px rgba(0,0,0,0.4);
+    padding: 4rem 4.5rem;
+    position: relative;
+    border: 1px solid var(--paper-darker);
+  }
+
+  .book-page::before {
+    content: '';
+    position: absolute;
+    left: 3.5rem;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: rgba(139,101,20,0.2);
+  }
+
+  /* ── CHAPTER HEADER ── */
+  .chapter-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--paper-darker);
+  }
+
+  .chapter-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .chapter-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    font-weight: 900;
+    font-style: italic;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+
+  .chapter-epigraph {
+    margin-top: 1.2rem;
+    font-style: italic;
+    color: var(--ink-faded);
+    font-size: 1rem;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+
+  .chapter-epigraph cite {
+    display: block;
+    margin-top: 0.3rem;
+    font-style: normal;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── STORY TEXT ── */
+  .story p {
+    font-size: 1.18rem;
+    line-height: 1.85;
+    color: var(--ink);
+    margin-bottom: 1.4rem;
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  .story p:first-of-type::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 4.2rem;
+    font-weight: 900;
+    float: left;
+    line-height: 0.8;
+    margin-right: 0.1em;
+    margin-top: 0.1em;
+    color: var(--accent);
+  }
+
+  .story em {
+    font-style: italic;
+    color: var(--ink-faded);
+  }
+
+  .story strong {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  /* ── SCENE BREAK ── */
+  .scene-break {
+    text-align: center;
+    margin: 2.5rem 0;
+    color: var(--accent-gold);
+    font-size: 1.1rem;
+    letter-spacing: 0.5em;
+  }
+
+  /* ── CONCEPT BOX ── */
+  .concept-box {
+    background: var(--concept-bg);
+    border-left: 4px solid var(--concept-border);
+    border: 1px solid var(--concept-border);
+    border-left-width: 4px;
+    padding: 1.4rem 1.8rem;
+    margin: 2rem 0;
+    position: relative;
+    box-shadow: inset 0 0 40px rgba(139,105,20,0.06);
+  }
+
+  .concept-box::before {
+    content: attr(data-label);
+    position: absolute;
+    top: -0.65rem;
+    left: 1.2rem;
+    background: var(--concept-bg);
+    padding: 0 0.5rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--concept-border);
+    font-weight: 700;
+  }
+
+  .concept-box h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+
+  .concept-box p {
+    font-size: 1.02rem;
+    line-height: 1.7;
+    color: var(--ink-faded);
+    margin-bottom: 0.5rem;
+  }
+
+  .concept-box p:last-child { margin-bottom: 0; }
+
+  .concept-formula {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--accent);
+    background: rgba(139,37,0,0.06);
+    padding: 0.4rem 0.8rem;
+    display: inline-block;
+    margin: 0.4rem 0;
+    border-radius: 2px;
+  }
+
+  /* ── DIALOGUE ── */
+  .dialogue {
+    margin: 0.8rem 0;
+    padding-left: 1.5rem;
+    border-left: 2px solid var(--paper-darker);
+  }
+
+  .speaker {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.1rem;
+  }
+
+  /* ── CLUE CARD ── */
+  .clue-card {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 1.2rem 1.6rem;
+    margin: 2rem 0;
+    position: relative;
+    transform: rotate(-0.5deg);
+    box-shadow: 3px 3px 0 var(--accent), 6px 6px 12px rgba(0,0,0,0.3);
+  }
+
+  .clue-card::before {
+    content: '🔍 İPUCU';
+    font-family: 'Playfair Display', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--accent-gold);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .clue-card p {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--paper) !important;
+    text-align: left !important;
+    margin: 0 !important;
+  }
+
+  /* ── CHAPTER END / NEXT ── */
+  .chapter-end {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--paper-darker);
+    text-align: center;
+  }
+
+  .chapter-end-ornament {
+    font-size: 1.4rem;
+    color: var(--accent-gold);
+    letter-spacing: 0.5em;
+    margin-bottom: 1rem;
+  }
+
+  .next-chapter-btn {
+    background: var(--accent);
+    color: var(--paper);
+    border: none;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-style: italic;
+    padding: 0.8rem 2.2rem;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: all 0.25s;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+
+  .next-chapter-btn:hover {
+    background: var(--ink);
+    box-shadow: 3px 3px 0 var(--accent);
+    transform: translate(-1px, -1px);
+  }
+
+  .coming-soon {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    color: var(--ink-faded);
+    font-size: 0.95rem;
+    margin-top: 0.8rem;
+  }
+
+  /* ── SIDEBAR CONCEPT LIST ── */
+  .concept-sidebar {
+    margin-top: 2.5rem;
+    padding: 1.5rem 2rem;
+    background: var(--paper-dark);
+    border: 1px solid var(--paper-darker);
+    border-top: 3px solid var(--accent);
+  }
+
+  .sidebar-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .concept-tag {
+    display: inline-block;
+    background: var(--paper);
+    border: 1px solid var(--concept-border);
+    color: var(--concept-border);
+    font-family: 'IM Fell English', serif;
+    font-size: 0.88rem;
+    padding: 0.2rem 0.7rem;
+    margin: 0.2rem 0.2rem 0.2rem 0;
+    border-radius: 2px;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .book-page { padding: 2.5rem 1.8rem; }
+    .book-page::before { display: none; }
+  }
+
+  /* ── SCROLL BAR ── */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--ink); }
+  ::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header class="site-header">
+  <div class="header-ornament">❧ &nbsp; Bir İstatistik Romanı &nbsp; ❧</div>
+  <h1 class="site-title">Sayıların Gölgesinde</h1>
+  <p class="site-subtitle">Edmund Voss ve Belirsizliğin Bilimi</p>
+  <div class="header-rule"></div>
+</header>
+
+<!-- ══ CHAPTER NAV ══ -->
+<nav class="chapter-nav">
+  <div class="chapter-nav-inner">
+    <span class="nav-label">Bölümler:</span>
+    <button class="chapter-btn active" onclick="showChapter(1, this)">I. Bölüm</button>
+    <button class="chapter-btn" onclick="showChapter(2, this)">II. Bölüm</button>
+    <button class="chapter-btn locked" onclick="return false" title="Yakında">III. Bölüm</button>
+    <button class="chapter-btn locked" onclick="return false" title="Yakında">IV. Bölüm</button>
+    <button class="chapter-btn locked" onclick="return false" title="Yakında">V. Bölüm</button>
+  </div>
+</nav>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+
+  <!-- ════ BÖLÜM I ════ -->
+  <section class="chapter active" id="chapter-1">
+    <article class="book-page">
+
+      <header class="chapter-header">
+        <div class="chapter-number">Birinci Bölüm</div>
+        <h2 class="chapter-title">Ölü Adama Ait Rakamlar</h2>
+        <p class="chapter-epigraph">
+          "Dünya gözlemlerin birikiminden ibarettir.<br>
+          Sorun, hangisine güveneceğinizi bilmektir."
+          <cite>— Edmund Voss, Kişisel Notlar, 1903</cite>
+        </p>
+      </header>
+
+      <div class="story">
+
+        <p>Londra'nın kasım sisi, Whitechapel'in dar sokaklarını sanki pamuğa sarmış gibiydi. Edmund Voss dışarı çıktığında saat henüz sabahın altısını çeyrek geçiyordu; ama hanedeki gaz lambası o saate kadar hiç sönmemişti. Masanın üzerinde üç ayrı deftere dağılmış rakamlar, boş bir fincan ve bir sigara izmariti bırakmıştı. Rakamlar onu bir haftadır bekliyordu; bugün sonunda konuşacaklardı.</p>
+
+        <p>Voss'un mesleği ne dedektiflik ne de muhasebeciliğe benziyordu — ama ikisinin de kalbine dokunuyordu. <em>Adli istatistikçi.</em> Ölüm belgelerini, mahkeme kayıtlarını ve vergi defterlerini okuyordu; insanların gördüğü yerde rastlantı, onun gördüğü yerde örüntü yatardı. Polis müfettişleri zaman zaman ona gelirdi; o zaman Voss devreye girerdi.</p>
+
+        <div class="clue-card">
+          <p>Müfettiş Calloway'den telgraf, 5 Kasım 1903 sabahı:<br><br>
+          "Voss — Limehouse'da bir ölüm. Resmi kayıt: kalp krizi. Ailenin itirazı var. 
+          Noterde bir de dosya bırakmış: rakamlar içeriyor. Anlayan lazım. — C."</p>
+        </div>
+
+        <p>Ölünün adı Harold Fenwick'ti. Altmış iki yaşında, Thames kıyısında küçük bir sigorta acentesinin sahibi. Fenwick'in oğlu Albert, babasının "asla yorgun düşmeyen bir adam" olduğunu söylemişti müfettişe; kalp hastalığının hiçbir belirtisi yokmuş. Ama işte, noterde bir dosya. Ve dosyanın içinde bir tablo.</p>
+
+        <div class="concept-box" data-label="İstatistik Kavramı">
+          <h4>Veri ve Gözlem</h4>
+          <p>Voss masaya oturduğunda ilk yaptığı şey tabloya bakmak değil, tablonun <em>ne olduğunu</em> anlamak oldu. Veriler ham gerçekliklerdir — ölçtüğünüz, saydığınız, kaydettiğiniz şeyler. Fenwick'in tablosundaki her satır bir <strong>gözlem</strong>, her sütun bir <strong>değişken</strong>idi.</p>
+          <p>Ama veri tek başına konuşmaz. Voss bunu yıllar içinde öğrenmişti: <em>"Rakamlar yalnızca doğru soruyla dile gelir."</em></p>
+        </div>
+
+        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+        <p>Müfettişin ofisine yürürken Voss dosyayı açık tuttu. Fenwick'in tablosunda yirmi iki satır vardı: her satır bir poliçe, her poliçe bir müşteri, her müşterinin yanında bir rakam sütunu. Poliçe tutarı, müşterinin yaşı, ödeme süresi ve — bu ilginçti — <em>müşterinin tahmini ölüm tarihi.</em></p>
+
+        <p>Voss durdu. Islak kaldırımda durdu ve bir daha okudu.</p>
+
+        <p><em>Tahmini ölüm tarihi.</em></p>
+
+        <p>Fenwick bir sigorta acentesiydi. Sigorta acenteleri böyle tablolar tutardı — hayat sigortası hesaplamaları için ölüm olasılıklarına bakarlardı. Buna "aktüerya" denirdi. Ama Voss'u asıl durduran şey sütunun başlığı değil, son iki satırdaki isimlerdi. Birinin yanında kırmızı mürekkeple bir çarpı işareti vardı. Diğerinin yanında da.</p>
+
+        <p>İkisi de bu sonbaharda ölmüştü.</p>
+
+        <div class="concept-box" data-label="İstatistik Kavramı">
+          <h4>Olasılık — Belirsizliğin Dili</h4>
+          <p>Voss o gece defterine şunu yazdı: <em>"İki kişi aynı sonbaharda öldü. Bu bir tesadüf mü, yoksa bir örüntü mü? Soruyu doğru sormak için olasılığa ihtiyacım var."</em></p>
+          <p>Olasılık, belirsizliği sayıya dökmektir. Bir olayın gerçekleşme şansını 0 ile 1 arasında ifade ederiz:</p>
+          <span class="concept-formula">P(A) = (A'nın gerçekleşme sayısı) / (Toplam mümkün sonuç sayısı)</span>
+          <p>Eğer tablodaki kırk kişiden ikisi aynı mevsimde ölüyorsa, bu durum gerçekten "şaşırtıcı" mıdır? Yoksa hayat sigortası portföyünde beklenen bir şey midir? Voss bunu hesaplayana kadar "şüpheli" demezdi — çünkü sezgi aldatıcıdır, ama sayılar tartışılmaz.</p>
+        </div>
+
+        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+        <p>Müfettiş Calloway kırk beş yaşında, geniş omuzlu, sigara yakan gözlü bir adamdı. Voss'u kapıda karşıladı; elinde Fenwick'in dosyasının bir kopyası vardı.</p>
+
+        <div class="dialogue">
+          <div class="speaker">Calloway</div>
+          <p>"İki ölüm. Aynı portföydeki iki kişi. Aile tesadüf diyor. Ben tesadüfe pek inanmam, Voss."</p>
+        </div>
+
+        <div class="dialogue">
+          <div class="speaker">Voss</div>
+          <p>"Ben de inanmam. Ama inanmak ya da inanmamak bilim değildir. Portföyde kaç kişi var toplamda?"</p>
+        </div>
+
+        <div class="dialogue">
+          <div class="speaker">Calloway</div>
+          <p>"Kırk yedi."</p>
+        </div>
+
+        <div class="dialogue">
+          <div class="speaker">Voss</div>
+          <p>"Kırk yedi kişilik bir grupta, bir yılda kaç ölüm bekleriz? Yaş ortalaması nedir?"</p>
+        </div>
+
+        <p>Calloway kaşlarını çattı. "Siz istatistikçiler hep böyle yaparsınız — cinayeti araştırırken nüfus istatistiğine dalarsınız."</p>
+
+        <p>"Aksine," dedi Voss, dosyayı masaya açarken. "Cinayeti bulmak istiyorsanız önce <em>neyin normal olduğunu</em> bilmek zorundasınız. Yoksa her ölüm size şüpheli gelir."</p>
+
+        <div class="concept-box" data-label="İstatistik Kavramı">
+          <h4>Popülasyon ve Örneklem</h4>
+          <p>Fenwick'in kırk yedi müşterisi, Voss için bir <strong>örneklemdi</strong> — Londra'daki tüm orta yaşlı sigorta müşterilerinden çekilmiş küçük bir kesit. Asıl soru şuydu: bu örneklemdeki ölüm oranı, <strong>popülasyonda</strong> beklenenden farklı mıydı?</p>
+          <p><strong>Popülasyon:</strong> İncelemek istediğimiz tüm bireyler veya olgular bütünü.</p>
+          <p><strong>Örneklem:</strong> Popülasyondan seçilen, incelenen alt küme.</p>
+          <p>Voss'un yaptığı şey buydu: kırk yedi kişilik örneklemden, tüm popülasyon hakkında çıkarım yapmaya çalışmak. Bu istatistiğin özüdür — <em>az ile çok hakkında konuşmak.</em></p>
+        </div>
+
+        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+        <p>Voss öğleden sonraya kadar hesapladı. İngiltere'nin 1901 sayımından aldığı verilerle, kırk ile yetmiş yaş arasındaki erkeklerin yıllık ölüm oranını biliyordu: yaklaşık binde on dört. Kırk yedi kişilik bir grupta, bir yılda beklenen ölüm sayısı —</p>
+
+        <span class="concept-formula" style="display:block; text-align:center; margin: 1rem 2rem;">47 × 0.014 ≈ 0.66 kişi</span>
+
+        <p>Yani bir yılda bu grupta ortalama <em>bir</em> ölüm beklenir. İki ölüm şüpheli miydi? Belki. Ama sadece belki.</p>
+
+        <p>Voss kalktı. Odasının tek penceresinden Thames'e baktı; sis hâlâ oradaydı. "Şüphe kanıt değildir," diye fısıldadı. "Ama bu tablonun içinde bir şey var."</p>
+
+        <p>Çünkü o anda fark etmişti: kırmızı çarpı işareti taşıyan iki isim, portföyün geri kalanından farklı bir özellik taşıyordu. İkisi de, tam da Fenwick'in tahmini ölüm tarihi sütununa yazdığı <em>aynı aya</em> denk geliyordu.</p>
+
+        <p>Bu artık istatistik değil, soruşturmaydı.</p>
+
+      </div><!-- /story -->
+
+      <!-- Concept sidebar -->
+      <div class="concept-sidebar">
+        <div class="sidebar-title">Bu Bölümde Geçen Kavramlar</div>
+        <span class="concept-tag">Veri &amp; Gözlem</span>
+        <span class="concept-tag">Olasılık</span>
+        <span class="concept-tag">Popülasyon</span>
+        <span class="concept-tag">Örneklem</span>
+        <span class="concept-tag">Beklenen Değer</span>
+      </div>
+
+      <div class="chapter-end">
+        <div class="chapter-end-ornament">— ✦ —</div>
+        <button class="next-chapter-btn" onclick="showChapter(2, document.querySelectorAll('.chapter-btn')[1])">
+          II. Bölüme Geç →
+        </button>
+      </div>
+
+    </article>
+  </section>
+
+
+  <!-- ════ BÖLÜM II ════ -->
+  <section class="chapter" id="chapter-2">
+    <article class="book-page">
+
+      <header class="chapter-header">
+        <div class="chapter-number">İkinci Bölüm</div>
+        <h2 class="chapter-title">Merkez Nerededir?</h2>
+        <p class="chapter-epigraph">
+          "Ortalama, bir kalabalığı tek bir rakama hapseder.<br>
+          Ama kalabalık asla tek bir rakam değildir."
+          <cite>— Edmund Voss, Kişisel Notlar, 1903</cite>
+        </p>
+      </header>
+
+      <div class="story">
+
+        <p>Fenwick'in ev halkını ancak ertesi sabah görebildi Voss. Limehouse'daki köşk, Thames'e bakan dar bir sokağa sıkışmıştı; dışarıdan bakılınca sıradan, içeriden ise gizli hesapların kokusu aldı. Albert Fenwick — ölen adamın oğlu, kırk yaşında, yorgun gözlü — kapıyı kendisi açtı. Elleri titriyordu ya da Voss öyle sanmıştı; sonradan anlayacaktı ki eller değil, gerçeğin kendisi titremekteydi.</p>
+
+        <p>"Babam her sabah saat altıda kalkardı," dedi Albert, Voss'u çalışma odasına alırken. "Otuz yıl boyunca hiç değişmedi. Poliçelerini gözden geçirirdi, müşteri kayıtlarını güncellerdi. Sıradan bir sabah gibi başladı. Sonra öğleden önce kalp krizi."</p>
+
+        <p>Voss, Fenwick'in masasına yaklaştı. Masa hâlâ dokunulmamıştı — polis izin vermemişti. Üzerinde açık bir defter ve birkaç sayfa vardı. Sayfalarda sütunlar, sütunlarda rakamlar. Voss bir sandalye çekti ve oturdu.</p>
+
+        <div class="clue-card">
+          <p>Fenwick'in masasındaki açık defterden, son sayfa:<br><br>
+          Müşteri yaşları (portföydeki 47 kişi):<br>
+          38, 41, 44, 44, 46, 47, 47, 48, 49, 51, 51, 52, 52, 53, 54,<br>
+          54, 55, 55, 56, 57, 57, 58, 59, 60, 61, 62, 62, 63, 64, 65...<br>
+          <em>ve devamı. Kenar notta tek bir soru işareti: "Merkez?"</em></p>
+        </div>
+
+        <p>Voss defteri inceledi. Fenwick yaşları sıralamıştı — kendi müşterilerinin yaşlarını, küçükten büyüğe. Sonra durmuştu. "Merkez?" diye sormuştu kendine. Cevabı bulamamış mıydı, yoksa bulduğu cevap onu rahatsız mı etmişti?</p>
+
+        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+        <p>"Babanız aktüerya hesaplamalarında en çok neyi kullanırdı?" diye sordu Voss, gözlerini defterden kaldırmadan.</p>
+
+        <p>Albert omuz silkti. "Ortalama yaşı. Poliçe primlerini hesaplamak için müşterilerinin tipik yaşını bilmesi gerekirdi."</p>
+
+        <div class="dialogue">
+          <div class="speaker">Voss</div>
+          <p>"Ortalama mı? Hangi ortalama?"</p>
+        </div>
+
+        <div class="dialogue">
+          <div class="speaker">Albert</div>
+          <p>"Ne demek istiyorsunuz? Ortalama, ortalamadır."</p>
+        </div>
+
+        <p>Voss kalemini masaya bıraktı. "Hayır," dedi sakin bir sesle. "Ortalama en az üç farklı şey demek olabilir. Ve hangisini kullandığınız, bazen hayat ile ölüm arasındaki fark kadar önemlidir."</p>
+
+        <div class="concept-box" data-label="İstatistik Kavramı">
+          <h4>Merkezi Eğilim Ölçüleri: Ortalama, Ortanca, Tepe Değer</h4>
+          <p>Voss bir kâğıt aldı ve yazmaya başladı. Portföydeki kırk yedi müşterinin yaş listesini üç farklı "merkez" ile özetlemek mümkündü:</p>
+
+          <p><strong>Aritmetik Ortalama (Mean):</strong> Tüm değerleri toplayıp sayıya böl.</p>
+          <span class="concept-formula">x̄ = (38 + 41 + 44 + ... + 71) / 47 ≈ 54.3 yaş</span>
+
+          <p><strong>Ortanca (Medyan):</strong> Sıralandığında tam ortadaki değer. 47 kişide 24. kişinin yaşı.</p>
+          <span class="concept-formula">Medyan = 54 yaş (24. değer)</span>
+
+          <p><strong>Tepe Değer (Mod):</strong> En çok tekrar eden yaş.</p>
+          <span class="concept-formula">Mod = 52 yaş (3 kişi)</span>
+
+          <p>Üçü birbirine yakın görünüyor — ama Voss'un asıl ilgilendiği şey bu değildi. İki kırmızı çarpılı müşterinin yaşlarıydı: 62 ve 65. Her ikisi de ortalamanın <em>hayli üzerindeydi.</em></p>
+        </div>
+
+        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+        <p>Albert masanın karşısına oturmuş, Voss'u izliyordu. Adam rakamlarla konuşuyordu sanki — kâğıda eğilmiş, kalemini kâh koyuyor kâh kaldırıyor, zaman zaman dudaklarını kıpırdatıyordu. Nihayet başını kaldırdı.</p>
+
+        <div class="dialogue">
+          <div class="speaker">Voss</div>
+          <p>"Babanızın portföyündeki müşteriler ağırlıklı olarak elli ile altmış yaş arasında. Ama kırmızı işaretli iki kişi bu grubun en yaşlıları. Bir sigorta acentesi için bu ne anlama gelir?"</p>
+        </div>
+
+        <div class="dialogue">
+          <div class="speaker">Albert</div>
+          <p>"Daha yüksek risk. Yaşlı müşteriler daha pahalı poliçe taşır. Daha yüksek prim öderler."</p>
+        </div>
+
+        <div class="dialogue">
+          <div class="speaker">Voss</div>
+          <p>"Ya da... daha çabuk ölürlerse, sigorta şirketi daha erken ödeme yapar. Babanızın bu iki müşteriyle özel bir düzenlemesi var mıydı?"</p>
+        </div>
+
+        <p>Albert'ın yüzü gerildi. Bir an sessiz kaldı — çok uzun bir sessizlik. Sonra ayağa kalktı ve dolabın üst rafına uzandı. Küçük, deri kaplı bir defter çıkardı. "Bunu size vermek isteyip istemediğimi bilmiyorum," dedi. "Ama sormak zorundaydınız."</p>
+
+        <div class="concept-box" data-label="İstatistik Kavramı">
+          <h4>Aykırı Değerler (Outlier) — Ortalamayı Yanıltanlar</h4>
+          <p>Voss defteri açtığında gördüğü şey onu bir an için dondurdu. Fenwick iki müşterisi için ayrı bir sayfa tutmuştu. Yaşları 62 ve 65 — portföyün geri kalanından belirgin biçimde uzak. İstatistik dilinde buna <strong>aykırı değer</strong> denir.</p>
+          <p>Aykırı değerler aritmetik ortalamayı çekerler — tıpkı bir ipin ucundaki ağırlık gibi. Fenwick'in portföyü için şunu düşünün:</p>
+          <span class="concept-formula">Ortalama (tüm liste): 54.3 yaş</span>
+          <span class="concept-formula">Ortalama (bu iki kişi hariç): 52.8 yaş</span>
+          <p>Sadece iki kişi, ortalamayı bir buçuk yıl yukarı çekiyordu. Oysa ortanca neredeyse hiç değişmemişti: 54'ten 53'e. Bu yüzden Voss ortancayı seviyordu — aykırı değerlere dayanıklıydı, ortalama gibi sürüklenmezdi.</p>
+          <p><em>"Bir yalancı, ortalamayı seçer. Dürüst bir istatistikçi, önce dağılımın tamamına bakar."</em></p>
+        </div>
+
+        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+        <p>Deri kaplı defterde iki isim yazıyordu: <strong>George Alderton, 62</strong> ve <strong>William Crane, 65.</strong> Her ikisinin de poliçe tutarları olağandışı yüksekti — o yaştaki müşteriler için piyasa ortalamasının neredeyse iki katı. Ve her ikisi de, Fenwick'in ölümünden tam yirmi gün önce vefat etmişti.</p>
+
+        <p>Ama asıl dikkat çekici şey sayfanın altındaydı. Fenwick, her iki ismin yanına küçük harflerle bir not düşmüştü:</p>
+
+        <p style="text-align:center; font-style:italic; color: var(--accent); font-family: 'IM Fell English', serif; font-size:1.1rem; margin: 1.5rem 0;">"Beklenen değil. Erkenden."</p>
+
+        <p>Voss deftere bir süre daha baktı. Sonra kapadı.</p>
+
+        <p>"Babanız bu iki ölümün zamanlamasını şüpheli bulmuş," dedi Voss sakin bir sesle. "İstatistiksel olarak her ikisi de ölüm olasılığının yüksek olduğu yaştaydı. Ama <em>ne zaman</em> öldükleri beklenenin dışındaydı. Ve babanız bunu yazmış. Sonra babanız da ölmüş."</p>
+
+        <p>Albert yutkundu.</p>
+
+        <div class="dialogue">
+          <div class="speaker">Voss</div>
+          <p>"Alderton ve Crane'in mirasçıları kim?"</p>
+        </div>
+
+        <p>Albert cevap vermedi. Ama cevaplamaması da bir cevaptı.</p>
+
+        <div class="concept-box" data-label="İstatistik Kavramı">
+          <h4>Beklenen Değer — Ne "Olması Gerekir"?</h4>
+          <p>Fenwick'in notundaki "beklenen değil" ifadesi, istatistiğin en temel sorularından birini işaret ediyordu. <strong>Beklenen değer</strong>, bir olayın uzun vadede ortalama olarak ne çıkacağını söyler.</p>
+          <p>62 yaşında bir İngiliz erkeğinin önümüzdeki yıl içinde ölme olasılığı yaklaşık %2.8'dir. Bu düşük ama sıfır değildir. Peki Alderton neden poliçesini aldıktan yalnızca dört ay sonra öldü? Beklenen süre çok daha uzundu.</p>
+          <span class="concept-formula">E(X) = Σ [ x · P(X = x) ]</span>
+          <p>Fenwick bunu hesaplamıştı. Ve hesap tutmuyordu. Bu onun hayatına mal olmuştu.</p>
+        </div>
+
+        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+        <p>Voss Fenwick'in evinden çıktığında hava kararmıştı. Sokak lambaları henüz yakılmamıştı; sis ve alacakaranlık Limehouse'u tanınmaz kılıyordu. Bir süre yürüdü, durdu, sonra geri döndü. Kapıyı tekrar çaldı. Albert şaşkın bir yüzle açtı.</p>
+
+        <div class="dialogue">
+          <div class="speaker">Voss</div>
+          <p>"Son bir şey. Alderton ile Crane aynı sigorta şirketiyle mi çalışıyordu?"</p>
+        </div>
+
+        <div class="dialogue">
+          <div class="speaker">Albert</div>
+          <p>"Evet. Thames Life &amp; Assurance. Babanın en büyük müşterisi."</p>
+        </div>
+
+        <p>Voss şapkasını düzeltti. Thames Life &amp; Assurance. İki müşteri beklenenden önce ölmüştü. Sigorta şirketi iki büyük poliçeyi erken ödemek zorunda kalmıştı — ya da tam tersine, kalmamıştı. Her şey kimin lehine olduğuna bağlıydı.</p>
+
+        <p>Yanıtlar rakamların içindeydi. Her zaman olduğu gibi. Sadece doğru soruları sormak gerekiyordu.</p>
+
+        <p>Ve Voss sorularını sormaya sabah başlayacaktı.</p>
+
+      </div><!-- /story -->
+
+      <div class="concept-sidebar">
+        <div class="sidebar-title">Bu Bölümde Geçen Kavramlar</div>
+        <span class="concept-tag">Aritmetik Ortalama</span>
+        <span class="concept-tag">Ortanca (Medyan)</span>
+        <span class="concept-tag">Tepe Değer (Mod)</span>
+        <span class="concept-tag">Aykırı Değer</span>
+        <span class="concept-tag">Beklenen Değer</span>
+        <span class="concept-tag">Merkezi Eğilim</span>
+      </div>
+
+      <div class="chapter-end">
+        <div class="chapter-end-ornament">— ✦ —</div>
+        <button class="next-chapter-btn" onclick="alert('III. Bölüm yakında!')">
+          III. Bölüme Geç →
+        </button>
+        <p class="coming-soon">III. Bölüm: <em>"Dağılmanın Ölçüsü"</em> — Varyans, Standart Sapma, Thames Life'ın gizli hesapları</p>
+      </div>
+
+    </article>
+  </section>
+
+</main>
+
+<script>
+function showChapter(n, btn) {
+  // hide all
+  document.querySelectorAll('.chapter').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.chapter-btn').forEach(b => b.classList.remove('active'));
+  // show selected
+  const target = document.getElementById('chapter-' + n);
+  if (target) {
+    target.classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+</script>
+</body>
+</html>
