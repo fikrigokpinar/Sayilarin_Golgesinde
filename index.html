@@ -479,7 +479,7 @@
     <button class="chapter-btn" onclick="showChapter(2, this)">II. Bölüm</button>
     <button class="chapter-btn" onclick="showChapter(3, this)">III. Bölüm</button>
     <button class="chapter-btn" onclick="showChapter(4, this)">IV. Bölüm</button>
-    <button class="chapter-btn locked" onclick="return false" title="Yakında">V. Bölüm</button>
+    <button class="chapter-btn" onclick="showChapter(5, this)">V. Bölüm</button>
   </div>
 </nav>
 
@@ -1067,10 +1067,143 @@
       </div>
 
       <div class="chapter-end">
-        <div class="chapter-end-ornament">— ✦ SON ✦ —</div>
-        <p class="coming-soon" style="font-size:1.05rem; margin-top:0.5rem;">
-          <em>Edmund Voss'un yeni vakası yakında...</em><br>
-          V. Bölüm: <em>"Regresyon"</em>
+        <div class="chapter-end-ornament">— ✦ —</div>
+        <button class="next-chapter-btn" onclick="showChapter(5, document.querySelectorAll('.chapter-btn')[4])">
+          V. Bölüme Geç →
+        </button>
+        <p class="coming-soon">V. Bölüm: <em>"İki Değişken Arasındaki Gölge"</em></p>
+      </div>
+
+    </article>
+  </section>
+
+  <!-- ════ BÖLÜM V ════ -->
+  <section class="chapter" id="chapter-5">
+    <article class="book-page">
+
+      <header class="chapter-header">
+        <div class="chapter-number">Beşinci Bölüm</div>
+        <h2 class="chapter-title">İki Değişken Arasındaki Gölge</h2>
+        <p class="chapter-epigraph">
+          "İki şeyin birlikte hareket etmesi,<br>
+          birinin diğerini neden hareket ettirdiği anlamına gelmez.<br>
+          Ama bazen — sadece bazen — gelir."
+          <cite>— Edmund Voss, Kişisel Notlar, 1903</cite>
+        </p>
+      </header>
+
+      <div class="story">
+
+        <p>Thames Life & Assurance'ın genel müdürü Reginald Holt, Voss'u beklediği belli olan bir adamın soğukluğuyla karşıladı. Kırk sekiz yaşında, gümüş saçlı, kollarını masanın üzerinde birleştirmiş, sanki kendi ofisinde değil bir mahkemede oturuyormuş gibi dikkatle seçilmiş bir duruşu vardı. Voss içeri girdiğinde ayağa kalkmadı.</p>
+
+        <p>"Bay Voss," dedi Holt, sesi çok kontrollüydü. "Müfettiş Calloway sizi önceden haber verdi. İki müşterimizin talihsiz kaybından dolayı üzgünüz. Ama bunun bir soruşturmayı gerektirdiğini anlamıyorum."</p>
+
+        <p>"Anlamazsınız," dedi Voss, oturmadan. "Çünkü rakamlarınızı henüz görmediniz."</p>
+
+        <p>Çantasından iki sayfa çıkardı. Birincisi Thames Life'ın son üç yılına ait ödeme kayıtlarıydı — Calloway'in mahkeme kararıyla aldığı belgeler. İkincisi Voss'un kendi hesapladığı bir tablo. Masaya koydu, ikisini yan yana.</p>
+
+        <div class="clue-card">
+          <p>Thames Life & Assurance — Son 3 yıl, 60 yaş üstü poliçe ödemeleri:<br><br>
+          Poliçe yaşı (ay) → Ödeme tutarı (£):<br>
+          4 ay → £2.400 &nbsp;|&nbsp; 5 ay → £2.200 &nbsp;|&nbsp; 4 ay → £2.600<br>
+          6 ay → £2.100 &nbsp;|&nbsp; 3 ay → £2.800 &nbsp;|&nbsp; 5 ay → £2.300<br>
+          <em>Voss'un notu kenar boşluğunda: "Poliçe ne kadar kısa, ödeme o kadar yüksek. Tesadüf mü?"</em></p>
+        </div>
+
+        <p>Holt tabloya baktı. Sonra Voss'a. "Bu rakamlar ne gösteriyor size?"</p>
+
+        <p>"Bir ilişki," dedi Voss. "Poliçenin yaşı azaldıkça ödeme tutarı artıyor. Ya da tersinden bakarsak: büyük tutarlı poliçeler, çok kısa süre içinde ödeme gerektiriyor. Bu bir korelasyon."</p>
+
+        <div class="concept-box" data-label="İstatistik Kavramı">
+          <h4>Korelasyon — İki Değişken Birlikte Dans Eder</h4>
+          <p><strong>Korelasyon</strong>, iki sayısal değişkenin birlikte nasıl değiştiğini ölçer. -1 ile +1 arasında bir sayıyla ifade edilir.</p>
+          <span class="concept-formula">r = +1 → Biri artınca diğeri tam artar</span>
+          <span class="concept-formula">r = −1 → Biri artınca diğeri tam azalır</span>
+          <span class="concept-formula">r = 0 &nbsp;→ İlişki yok</span>
+          <p>Thames Life'ın verisinde Voss r = −0.87 hesaplamıştı. Güçlü, negatif bir korelasyon. Poliçe süresi uzadıkça ödeme miktarı düşüyor — ya da daha doğrusu, kısa sürede ölen müşteriler yüksek tutarlı poliçe taşıyor.</p>
+          <p>Ama Voss burada durdu. Çünkü korelasyonun altın kuralını biliyordu:</p>
+          <p style="font-style:italic; color: var(--accent);">"Korelasyon, nedensellik değildir."</p>
+          <p>İki şeyin birlikte hareket etmesi, birinin diğerine yol açtığı anlamına gelmez. Bunu kanıtlamak için bir adım daha gerekirdi.</p>
+        </div>
+
+        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+        <p>Holt kollarını çözdü. Küçük bir hareketti ama Voss gördü — insanlar gergin olduklarında en önce omuzları değil, dirsekleri bırakır. "Korelasyon," dedi Holt sesi hafifçe değişmiş halde. "Bu kelimeyi biliyorum. Sigorta sektöründe her şey korelasyonla çalışır. Bu sizi nereye götürüyor?"</p>
+
+        <p>"Regresyona," dedi Voss.</p>
+
+        <div class="concept-box" data-label="İstatistik Kavramı">
+          <h4>Basit Doğrusal Regresyon — Geleceği Okumak</h4>
+          <p>Korelasyon "ilişki var mı?" diye sorar. <strong>Regresyon</strong> ise "bu ilişkiyi kullanarak tahmin yapabilir miyim?" diye sorar. En basit haliyle:</p>
+          <span class="concept-formula">Ŷ = β₀ + β₁X</span>
+          <p>Burada X bağımsız değişken (poliçe yaşı, ay olarak), Ŷ tahmin edilen değer (beklenen ödeme), β₀ sabit (kesim noktası) ve β₁ eğimdir (X bir birim artınca Ŷ ne kadar değişir).</p>
+          <p>Voss Thames Life verisinden şunu bulmuştu:</p>
+          <span class="concept-formula">Ödeme (£) = 3.100 − 180 × Poliçe_Yaşı (ay)</span>
+          <p>Yani her geçen ay, beklenen ödeme 180 sterlin düşüyor. Ve 3 aylık poliçede beklenen ödeme: 3.100 − 540 = <strong>£2.560.</strong></p>
+          <p>Gerçek ödeme: <strong>£2.800.</strong> Beklenenden yüksek. Alderton ve Crane'in poliçeleri de 4 ve 5 aylıktı — ve her ikisi de regresyon çizgisinin <em>üstünde</em> duruyordu. İstatistik dilinde buna <strong>artık (residual)</strong> denir: gerçek değer ile tahmin arasındaki fark.</p>
+          <p>Büyük artık = beklenmedik durum = soruşturulması gereken şey.</p>
+        </div>
+
+        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+        <p>Voss ikinci sayfayı masaya sürdü. Bu sefer sadece iki nokta vardı üzerinde — bir koordinat düzleminde. Yatay eksende poliçe yaşı, dikey eksende ödeme tutarı. Bütün diğer noktalar ince bir çizginin yakınında kümelenmişti. Sadece iki nokta çizginin çok uzağındaydı. İki nokta yukarıda, sağ üst köşeye doğru fırlayan iki nokta.</p>
+
+        <p>"Alderton," dedi Voss, sol noktayı işaret ederek. "Crane," dedi, sağdakini göstererek. "Her ikisi de regresyon çizgisinin dışında. Her ikisi de beklenenin üstünde ödeme gerektirdi. Ve her ikisi de poliçelerini aldıktan çok kısa süre sonra öldü."</p>
+
+        <p>Holt masadan kalktı. Pencereye yürüdü, Thames'e baktı. Uzun bir sessizlik oldu — o tür bir sessizlik ki, içinde bir itirafın piştiği hissediliyordu.</p>
+
+        <div class="dialogue">
+          <div class="speaker">Holt</div>
+          <p>"Ne istiyorsunuz, Bay Voss?"</p>
+        </div>
+
+        <div class="dialogue">
+          <div class="speaker">Voss</div>
+          <p>"Üçüncü noktanın adını."</p>
+        </div>
+
+        <p>Holt döndü. Yüzü griydi artık, gümüş saçlarıyla neredeyse bütünleşmişti. "Ne üçüncü noktası?"</p>
+
+        <p>"Fenwick," dedi Voss. "O da bu çizginin dışında olurdu. Eğer yaşasaydı."</p>
+
+        <div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+        <p>Calloway akşam üzeri Thames Life'ın ofisine iki dedektifle geldi. Holt direnmedi. Masanın çekmecesinden küçük, siyah bir defter çıkardı ve Calloway'e uzattı — hiç konuşmadan. İçinde üç isim yazıyordu: Alderton, Crane, Fenwick. Yanlarında tarihler ve tutarlar. Ve her birinin karşısında aynı iki kelime:</p>
+
+        <p style="text-align:center; font-style:italic; color: var(--accent); font-family: 'IM Fell English', serif; font-size:1.15rem; margin: 1.8rem 0;">"Düzenlendi. Ödendi."</p>
+
+        <p>Voss dışarı çıktığında hava kararmıştı yine. Ama bu sefer sis yoktu — garip bir netlik vardı Londra üzerinde, sanki şehir de sonunda nefes vermişti. Yürürken defterine baktı. Son sayfada kendi el yazısıyla şu satırlar duruyordu:</p>
+
+        <p><em>İki değişken arasındaki ilişkiyi buldun. Ama ilişki, suçu kanıtlamaz. Suçu kanıtlayan şey, ilişkiyi kimin kullandığı ve nasıl kullandığıdır. İstatistik ancak buraya kadar gider. Gerisi, insanın işidir.</em></p>
+
+        <p>Defteri kapattı. Cebine koydu. Ve Thames'in karşı kıyısındaki ışıklara bakarak yürümeye devam etti.</p>
+
+        <div class="concept-box" data-label="İstatistik Kavramı">
+          <h4>Korelasyon ≠ Nedensellik — Son Bir Not</h4>
+          <p>Thames Life vakası kapanmıştı. Ama Voss'un aklında bir şey kalmıştı: regresyon çizgisi suçu göstermemişti. Sadece <em>nerede bakılması gerektiğini</em> göstermişti.</p>
+          <p>İstatistik tam olarak budur: veriyi anlayıp doğru soruyu sormak. Korelasyon yüksek olabilir ama neden-sonuç ilişkisi kurabilmek için ek kanıt, mantık ve bağlam gerekir. Buz dondurma satışları ile boğulma vakaları arasında güçlü pozitif korelasyon vardır — ikisi de yaz aylarında artar. Ama biri diğerine neden olmaz.</p>
+          <span class="concept-formula">Korelasyon: "Birlikte hareket ediyorlar."</span>
+          <span class="concept-formula">Nedensellik: "Biri diğerine yol açıyor."</span>
+          <p>Voss her vakada önce korelasyonu arardı. Sonra nedenselliği. İkincisi için ise istatistikten çok daha fazlası gerekiyordu.</p>
+        </div>
+
+      </div><!-- /story -->
+
+      <div class="concept-sidebar">
+        <div class="sidebar-title">Bu Bölümde Geçen Kavramlar</div>
+        <span class="concept-tag">Korelasyon</span>
+        <span class="concept-tag">Korelasyon Katsayısı (r)</span>
+        <span class="concept-tag">Basit Doğrusal Regresyon</span>
+        <span class="concept-tag">Bağımsız / Bağımlı Değişken</span>
+        <span class="concept-tag">Artık (Residual)</span>
+        <span class="concept-tag">Korelasyon ≠ Nedensellik</span>
+      </div>
+
+      <div class="chapter-end">
+        <div class="chapter-end-ornament">— ✦ FİNAL ✦ —</div>
+        <p class="coming-soon" style="font-size: 1.05rem; margin-top: 0.5rem; color: var(--ink-faded);">
+          <em>"Sayıların Gölgesinde" tamamlandı.</em><br><br>
+          Edmund Voss'un yeni vakası yakında...
         </p>
       </div>
 
