@@ -788,7 +788,7 @@
     <a href="#bolum-4">IV</a>
     <a href="#bolum-5">V</a>
     <a href="#bolum-6">VI</a>
-    <a href="#bolum-7" class="disabled">VII</a>
+    <a href="#bolum-7">VII</a>
   </div>
 </nav>
 
@@ -811,7 +811,7 @@
       <li><a href="#bolum-4" class="active">IV. Bölüm</a></li>
       <li><a href="#bolum-5" class="active">V. Bölüm</a></li>
       <li><a href="#bolum-6" class="active">VI. Bölüm</a></li>
-      <li><a href="#bolum-7" class="disabled">VII. Bölüm</a></li>
+      <li><a href="#bolum-7" class="active">VII. Bölüm</a></li>
     </ul>
   </nav>
 
@@ -2116,19 +2116,273 @@
 
 <hr class="divider">
 
-<div class="chapter-coming reveal" id="bolum-7">
-  <div class="coming-icon">✦</div>
+<article class="chapter reveal" id="bolum-7">
   <p class="chapter-number">Yedinci Bölüm</p>
-  <h2 class="coming-title">Sonuç ve Çıkarım</h2>
-  <p class="coming-subtitle">Yakında yayınlanacak</p>
-</div>
+  <h2 class="chapter-title">Sonuç ve Çıkarım</h2>
+
+  <div class="epigraph">
+    İstatistik asla kesinlik vaat etmez.<br>
+    Sadece belirsizliğin içinden geçerek<br>
+    gerçeğe ulaşmanın yolunu gösterir.
+    <span class="epigraph-source">— Grifin R. Koipak, Kişisel Notlar, 1903</span>
+  </div>
+
+  <div class="prose">
+
+    <p>Mektup sabahın beşinde gitti. Koipak onu bizzat Başmüfettiş Hargrove'un Pimlico'daki evine bıraktı — Scotland Yard'a değil, çünkü Yard'da Calloway'in gözleri ve kulakları vardı. Zarfın içinde filigranlı kâğıt, Pemberton'ın ikinci ifadesi, Whitfield'ın yazılı beyanı, Holt'un itirafı, ve Koipak'un kendi hazırladığı istatistiksel analiz raporu — varyans hesapları, korelasyon tablosu, regresyon artıkları, p-değerleri, hepsi.</p>
+
+    <p>Zarfın kapağına tek bir cümle yazmıştı: <em>"Müfettiş Calloway hakkında, acil."</em></p>
+
+    <p>Sonra eve döndü. Bekledi. Beklerken defterini açtı ve son bölümü yazmaya başladı — çünkü Koipak'un bekleme biçimi buydu: düşünmek, yazmak, hesaplamak.</p>
+
+    <div class="scene-break">✦ ✦ ✦</div>
+
+    <h3>Bayes Teoremi</h3>
+
+    <p>Koipak masasına oturdu ve bu davanın istatistiksel otopsisini yaptı. Yedi gün önce — sadece yedi gün, ama bir ömür gibi hissediliyordu — Calloway'in kapısında durmuş, elinde Fenwick'in dosyasıyla, güvendiği adamın güvendiği istatistikçi olarak işe başlamıştı. O an Calloway'in suçlu olma ihtimalini düşünmüş müydü?</p>
+
+    <p>Hayır. Sıfıra yakındı. <strong>Prior olasılık</strong> — yeni kanıt görmeden önceki inanç — çok düşüktü. Yedi yıllık güven, onlarca ortak dava, Whitechapel'deki o ilk el uzatma. Prior, deneyimden beslenirdi ve Koipak'un deneyimi şuydu: Calloway iyi bir adamdır.</p>
+
+    <p>Ama <strong>Bayes teoremi</strong> der ki: yeni kanıt geldiğinde, prior güncellenir. Buna <strong>posterior olasılık</strong> denir — kanıt sonrası inanç.</p>
+
+    <div class="formula">
+      P(A|B) = P(B|A) · P(A) / P(B)<br>
+      <span style="font-size:0.85rem; font-style:normal; color:var(--ink-muted);">Posterior = Likelihood × Prior / Kanıtın genel olasılığı</span>
+    </div>
+
+    <p>Koipak defterine kanıtları sıraladı — her biri posterior'u güncelleyen bir veri noktası:</p>
+
+    <div class="document-block">
+      <div class="doc-title">Bayesian güncelleme — Calloway</div>
+      <strong>Prior:</strong> P(Calloway suçlu) ≈ 0.01 (Yedi yıllık güven.)<br><br>
+      <strong>Kanıt 1:</strong> Dosyadaki eksik sayfa. Calloway dosyayı Koipak'tan önce görmüş.<br>
+      → Posterior güncellenir: ~0.05<br><br>
+      <strong>Kanıt 2:</strong> Thames Life arşivindeki eksik 1901 sayfası. Calloway "hallederim" demiş.<br>
+      → Posterior: ~0.12<br><br>
+      <strong>Kanıt 3:</strong> Whitfield'ın ifadesi. Raporu Calloway'e vermiş; bir hafta sonra kovulmuş.<br>
+      → Posterior: ~0.45<br><br>
+      <strong>Kanıt 4:</strong> Filigran. Pemberton'a giden imzasız mektupların kâğıdı, Calloway'in masasında.<br>
+      → Posterior: ~0.78<br><br>
+      <strong>Kanıt 5:</strong> Holt'un itirafı. "Sadece 'Müfettiş' diyorlardı."<br>
+      → Posterior: ~0.94<br><br>
+      <strong>Kanıt 6:</strong> Korelasyon tablosu. Thames Life bağlantılı davalarda Calloway anormal hızda kapatıyor.<br>
+      → Posterior: ~0.98
+    </div>
+
+    <p>Yüzde doksan sekiz. Koipak kalemi bıraktı. <em>Kesinlik değil</em>, diye düşündü. <em>İstatistik asla kesinlik vermez. Ama yüzde doksan sekiz, bir mahkemenin "makul şüphenin ötesinde" dediği eşiğin üstündedir.</em></p>
+
+    <p>Ve henüz parmak izi sonuçları gelmemişti.</p>
+
+    <div class="scene-break">✦ ✦ ✦</div>
+
+    <p>Saat ikide kapı zili çaldı. Koipak açmadan önce durdu — bir an, belki iki saniye. Kapının arkasında kimin olduğunu biliyordu. Sadece bir kişi, bu saatte, haber vermeden gelirdi.</p>
+
+    <p>Kapıyı açtı.</p>
+
+    <p>Calloway duruyordu. Pardesüsünün yakası kalkıktı, şapkası ıslaktı — dışarıda yağmur başlamıştı. Yüzünde her zamanki sıcaklık yoktu. Onun yerine başka bir şey vardı: hesap yapan bir ifade. Koipak bu ifadeyi daha önce görmüştü — III. Bölüm'de, Calloway'in ofis kapısından çıkarken omzunun üstünden baktığında, bir anlığına yakaladığı o soğuk bakış.</p>
+
+    <p>"İçeri girebilir miyim?" dedi Calloway.</p>
+
+    <p>"Tabii."</p>
+
+    <p>Calloway içeri girdi. Odayı süzdü — Koipak'un masasındaki defterlere, hesaplara, duvardaki haritaya. Sonra Koipak'a döndü.</p>
+
+    <p>"Hargrove'a mektup yazdın."</p>
+
+    <p>Bu bir soru değildi. Koipak cevap vermedi. Calloway devam etti:</p>
+
+    <p>"Hargrove beni bu sabah çağırdı. Masasında senin raporun vardı. Filigranlı kâğıt. Pemberton'ın ifadesi. Whitfield." Calloway pardesüsünün düğmesini açtı. "Hepsini gördüm."</p>
+
+    <p>"Otur," dedi Koipak. Sesi sakindi — ama kalbi değildi.</p>
+
+    <p>Calloway oturmadı. Pencereye yürüdü. Dışarıda Thames'in üstünde yağmur çizgileri görünüyordu — gri çizgiler, gri su, gri gökyüzü. Her şey griydi. Koipak bunu uygun buldu; siyah-beyaz bir dava olsaydı, yedi gün sürmezdi.</p>
+
+    <div class="dialogue">
+      <p class="speaker">Calloway</p>
+      <p>"Ne kadar zamandır biliyorsun?"</p>
+    </div>
+
+    <div class="dialogue">
+      <p class="speaker">Koipak</p>
+      <p>"Bilmek doğru kelime değil. Şüphelenmek — Thames Life arşivindeki eksik sayfalardan itibaren. Filigranla şüphe güçlendi. Holt'un ifadesiyle neredeyse kesinleşti."</p>
+    </div>
+
+    <div class="dialogue">
+      <p class="speaker">Calloway</p>
+      <p>"'Neredeyse.' Her zaman böyle konuşursun. Yüzde doksanlar, güven aralıkları, p-değerleri. Hiçbir zaman 'evet' ya da 'hayır' demezsin."</p>
+    </div>
+
+    <div class="dialogue">
+      <p class="speaker">Koipak</p>
+      <p>"Çünkü 'evet' ya da 'hayır' yalan olurdu. Dünya öyle çalışmıyor. Belirsizlik her zaman var — onu yönetmek bilimdir, yok saymak tehlike."</p>
+    </div>
+
+    <p>Calloway döndü. Yüzünde garip bir ifade vardı — kızgınlık değil, yorgunluk değil, daha çok bir <em>merak</em>. Sanki Koipak'ı ilk kez gerçekten görüyormuş gibi.</p>
+
+    <p>"Seni bu davaya ben çağırdım," dedi Calloway, sesi alçalmıştı. "Biliyor musun neden?"</p>
+
+    <p>"Pemberton'ı buldurtmak için. Günah keçisi."</p>
+
+    <p>"Evet. Pemberton'ı bulacağını biliyordum — rakamlar onu işaret ediyordu, işaret etmek <em>zorundaydı</em>. Sonra dava kapanacaktı. Daha önce hep böyle olmuştu." Calloway durdu. "Ama bir şeyi hesaba katmamıştım."</p>
+
+    <p>"Neyi?"</p>
+
+    <p>"Seni." Calloway'in yüzünde, bir an için, eski sıcaklığın gölgesi belirdi. "Diğer dedektifler kanıtı bulunca durur. Sen kanıtın <em>kaynağını</em> soruyorsun. Korelasyonu buldun — ama nedenselliği aradın. Pemberton'ı buldun — ama confounding variable'ı aradın. Ben o confounding variable'dım, Koipak. Ve sen beni buldun."</p>
+
+    <div class="scene-break">✦ ✦ ✦</div>
+
+    <h3>Koşullu Olasılık</h3>
+
+    <p>Koipak konuşmadı. Dinledi. Calloway konuşmaya devam etti — ve konuştukça, hikâye tamamlandı.</p>
+
+    <p>Thames Life düzeni 1899'da başlamıştı. Calloway, şirketin mali sıkıntıda olduğunu biliyordu — bir soruşturma sırasında iç belgelerini görmüştü. Teklif basitti: yüksek tutarlı poliçeler, erken ölümler, hızlı ödemeler. Mirasçılara tazminatın bir kısmı; Calloway'e yüzde otuz. Pemberton belgeleri imzalardı. Calloway soruşturmaları kapatırdı. Sistem kendini besliyordu.</p>
+
+    <p>"Alderton ve Crane?" diye sordu Koipak.</p>
+
+    <p>"Doğal sebeplerle ölmediler." Calloway'in sesi düzdü — bir rapor okur gibi. "Ama benim ellerimle de değil. Bir üçüncü kişi — Thames Life'ın içinden biri. Ben sadece… sonrasını yönettim."</p>
+
+    <p>"Ve Fenwick?"</p>
+
+    <p>Calloway sessizleşti. Bu sessizlik diğerlerinden farklıydı — daha ağır, daha uzun. Koipak bekledi.</p>
+
+    <p>"Fenwick anomaliyi buldu. Akıllı bir adamdı — senin gibi rakamlara bakan biriydi. Tablosundaki kırmızı çarpılar, benim sistemimdeki ilk çatlaktı." Calloway yutkundu. "Thames Life üzerinden bana mektup yazdı — ama benim kim olduğumu bilmiyordu. Sadece 'Müfettiş'e yazıyordu. Mektubu aldım. Ve… Fenwick'le görüştüm."</p>
+
+    <p>"Son gecesinde. Saat on bir buçukta."</p>
+
+    <p>Calloway başını salladı. "Kalın bir ses. Güven veren türden." Albert'ın sözlerini tekrarlıyordu — bilmeden. "Fenwick'e her şeyi açıkladım. Durmasını söyledim. Kabul etti — ya da öyle sandım. Ertesi gün notere gittiğini öğrendiğimde…"</p>
+
+    <p>"Dosyayı bıraktığını."</p>
+
+    <p>"Evet. Ve o akşam Fenwick öldü." Calloway'in sesi kırıldı — ilk kez. "Ben öldürmedim onu, Koipak. Thames Life'ın içindeki adam — Fenwick'in notere gittiğini öğrenince… Ben durduramadım. Durdurmalıydım. Ama durduramadım."</p>
+
+    <p>Koipak bu ifadeyi tartıyordu — <strong>koşullu olasılık</strong> gibi. P(Fenwick ölür | Calloway düzeni yönetiyor) — bu olasılık, Calloway düzende olmasaydı sıfıra yakın olurdu. Calloway tetikçi değildi, ama tetikçinin var olmasını mümkün kılan koşulları yaratmıştı. İstatistikte buna <em>koşullu bağımlılık</em> derler: bir olay, diğerinin varlığında çok daha olası hale gelir.</p>
+
+    <div class="formula">
+      P(A|B) ≠ P(A)<br>
+      <span style="font-size:0.85rem; font-style:normal; color:var(--ink-muted);">B koşulunda A'nın olasılığı, koşulsuz olasılığından farklıdır.</span>
+    </div>
+
+    <p>Calloway, Fenwick'in ölüm koşulunu yaratmıştı. Eli temiz değildi — sadece farklı bir türden kirliydi.</p>
+
+    <div class="scene-break">✦ ✦ ✦</div>
+
+    <p>Calloway cebine uzandı. Koipak gerildi — ama Calloway çıkardığı şey bir silah değildi. Küçük, katlanmış bir kâğıttı.</p>
+
+    <p>"Bunu sana vermek istiyorum," dedi Calloway. "Fenwick'in mektubu. Bana yazdığı mektup. Noterdeki dosyadan çıkardığım sayfa — eksik sayfa."</p>
+
+    <p>Koipak kâğıdı aldı. Açtı. Fenwick'in el yazısı — tanıyordu artık, o sert, sinirli harfleri. Mektup kısaydı:</p>
+
+    <div class="document-block">
+      <div class="doc-title">Harold Fenwick'in mektubu, Kasım 1903</div>
+      <em>"Sayın Müfettiş,<br><br>
+      Portföyümdeki iki müşterinin ölüm zamanlaması, aktüeryal hesaplamalarla uyuşmamaktadır. Beklenen değerden sapma, istatistiksel olarak anlamlıdır. Tesadüf değildir.<br><br>
+      Bu durumu Thames Life &amp; Assurance'a bildirdim. Yanıt alamadım. Şimdi size bildiriyorum.<br><br>
+      Rakamlar yalan söylemez, efendim. Ama birisi rakamlara yalan söyletiyor.<br><br>
+      Saygılarımla,<br>
+      Harold Fenwick"</em>
+    </div>
+
+    <p>Koipak mektubu okudu. Sonra bir kez daha okudu. <em>"Rakamlar yalan söylemez, efendim. Ama birisi rakamlara yalan söyletiyor."</em> Fenwick de bir istatistikçiydi — kendi çapında, kendi diliyle. Ve haklıydı.</p>
+
+    <p>"Neden bunu sakladın?" dedi Koipak. "Neden yok etmedin?"</p>
+
+    <p>Calloway uzun bir süre cevap vermedi. Sonra:</p>
+
+    <p>"Çünkü haklıydı. Ve ben — bir parçam — bunu biliyordu." Durdu. "Yedi yıl önce sana 'aksanına değil, rakamlarına baktım' demiştim. Hatırlıyor musun?"</p>
+
+    <p>"Hatırlıyorum."</p>
+
+    <p>"O an doğru söylüyordum. Rakamlarına baktım ve doğruyu gördüm. Ama sonra… rakamları kendi çıkarım için kullanmaya başladım. Aynı aracı — istatistiği, olasılığı, sistemi — farklı bir amaç için çevirdim." Calloway'in sesi fısıltıya düşmüştü. "Fenwick bunu gördü. Sen de gördün. Aradaki fark şu: Fenwick'i susturabildim. Seni susturamazdım."</p>
+
+    <p>"Denemeyecek misin?"</p>
+
+    <p>Calloway'in yüzüne bir gölge düştü — yorgunluğun ötesinde bir şey. "Hayır," dedi. "Bu sefer değil."</p>
+
+    <div class="scene-break">✦ ✦ ✦</div>
+
+    <p>Tam o anda, dışarıdan ayak sesleri geldi. Birden fazla kişi — üç, belki dört. Merdiven boyunca çıkan sert, kararlı adımlar. Kapı çalındı — sert, resmi.</p>
+
+    <p>Koipak açtı. Başmüfettiş Hargrove duruyordu — altmış yaşlarında, uzun boylu, beyaz favorili. Arkasında iki polis memuru.</p>
+
+    <div class="dialogue">
+      <p class="speaker">Hargrove</p>
+      <p>"Bay Koipak. Raporunuzu aldım. Müfettiş Calloway burada mı?"</p>
+    </div>
+
+    <p>Koipak kenara çekildi. Calloway salonda duruyordu — pardesüsü hâlâ üstünde, şapkası elinde. Hargrove içeri girdi. İki adam birbirine baktı.</p>
+
+    <p>"Thomas," dedi Hargrove.</p>
+
+    <p>"William," dedi Calloway.</p>
+
+    <p>Sessizlik. Sonra Calloway pardesüsünü çıkardı. Katladı. Sandalyenin üstüne koydu. Ve ellerini uzattı.</p>
+
+    <p>Kelepçe sesi, Koipak'un hayatında duyduğu en sessiz sesti.</p>
+
+    <div class="scene-break">✦ ✦ ✦</div>
+
+    <h3>Çıkarım</h3>
+
+    <p>Calloway dışarı çıkarılırken kapıda durdu. Omzunun üstünden Koipak'a baktı — son kez.</p>
+
+    <p>"Bir Galli matematikçi," dedi, ve yüzünde acı bir gülümseme belirdi. "Yedi yıl önce herkes güldü. Ben gülmedim. Bunu hâlâ doğru yaptığımı düşünüyorum."</p>
+
+    <p>Sonra gitti. Ayak sesleri merdivende azaldı. Kapı kapandı. Koipak yalnız kaldı.</p>
+
+    <p>Odasına döndü. Masasına oturdu. Dışarıda yağmur dinmişti; bulutların arasından ilk kez bir çizgi güneş ışığı süzülüyordu — zayıf, emin olamayan bir ışık, ama orada olan.</p>
+
+    <p>Koipak defterini açtı. Son sayfaya geldi. Ve yazdı:</p>
+
+    <div class="document-block">
+      <div class="doc-title">Koipak'un defterinden, 13 Kasım 1903</div>
+      <em>"<strong>Çıkarım (inference)</strong> — eldeki veriden, gözlemlenemeyen bir gerçeğe ulaşmak. İstatistiğin tüm amacı budur. Örneklemden popülasyona. Gözlemden yasaya. Kanıttan gerçeğe.</em><br><br>
+      <em>Bu davada örneklemim küçüktü: birkaç eksik sayfa, bir filigran, iki tanık ifadesi, bir korelasyon tablosu. Ama her veri noktası, posterior'u güncelledi. Prior — güven — yüksekti. Kanıtlar onu çürüttü. Bayes'in dersi budur: ne kadar güçlü inanırsanız inanın, yeterli kanıt karşısında inancınızı güncellemek zorundasınızdır. Aksi takdirde bilim yapıyor değilsiniz — inanç yapıyorsunuzdur.</em><br><br>
+      <em>Calloway'e güvendim çünkü Londra'da bana güvenen tek kişiydi. Bir Galli'nin aksanını değil aklını gören tek adam. Bu güven, prior'umu yükseltti — haklı olarak. Ama güven, veriyi görmezden gelme hakkı vermez. Hiçbir prior, yeterli kanıt karşısında ayakta kalamaz.</em><br><br>
+      <em>Fenwick haklıydı: rakamlar yalan söylemez. Ama Fenwick'in bilmediği şey şuydu — rakamları susturmak isteyen kişi, rakamları dinlemeyi ilk öğreten kişi olabilir.</em><br><br>
+      <em>Bu davayı istatistik çözdü. Ama istatistiğin çözemediği bir soru kaldı: güvendiğin insanın seni kullandığını öğrendiğinde, güvenme yeteneğin ne olur?</em><br><br>
+      <em>Bunu zamanla öğreneceğim. Şimdilik, bir sonraki dosyayı açıyorum."</em>
+    </div>
+
+    <p>Koipak kalemini bıraktı. Masanın karşısındaki boş sandalyeye baktı — Eleanor'un sandalyesine. İlk kez, o sandalyenin neden hâlâ orada durduğunu anladı: çünkü bazı boşluklar doldurulmak için değil, hatırlamak için vardır. Eleanor'un yokluğu, tıpkı Calloway'in ihaneti gibi, bir veri noktasıydı — acı veren, ama gerçek. Ve gerçek, acı verse de, yalanın konforundan her zaman daha iyidir.</p>
+
+    <p>Dışarıda güneş, bulutların arasından Thames'e vurmuştu. Nehir, ilk kez o hafta, gümüş renginde parlıyordu. Koipak pencereye gitti ve baktı. Sis yoktu. Londra, kendini gösteriyordu — olduğu gibi, güzel ve çirkin, gri ve altın.</p>
+
+    <p>Koipak gülümsedi. Küçük, yorgun, ama gerçek bir gülümseme.</p>
+
+    <p>Sonra masasına döndü. Yeni bir dosya vardı — Calloway'in son sözü doğruydu: rakamlar her zaman bekliyordu.</p>
+
+    <p>Ve Koipak, her zaman olduğu gibi, dinlemeye hazırdı.</p>
+
+  </div><!-- /prose -->
+
+  <div class="concepts-box">
+    <h4>Bu Bölümde Geçen Kavramlar</h4>
+    <ul class="concepts-list">
+      <li>Bayes Teoremi</li>
+      <li>Prior Olasılık</li>
+      <li>Posterior Olasılık</li>
+      <li>Koşullu Olasılık</li>
+      <li>Bayesian Güncelleme</li>
+      <li>Çıkarım (Inference)</li>
+    </ul>
+  </div>
+
+  <div class="chapter-end">
+    <div class="ornament">✦ FİNAL ✦</div>
+    <div class="chapter-nav">
+      <a href="#bolum-6">← VI. Bölüm</a>
+      <a href="#hero" class="disabled">Sayıların Gölgesinde — Tamamlandı.</a>
+    </div>
+  </div>
+
+</article>
 
 <!-- ============================================
      FOOTER
      ============================================ -->
 <footer class="site-footer">
   <p>Sayıların Gölgesinde — Bir İstatistik Romanı</p>
-  <p style="margin-top:0.3rem;">Grifin R. Koipak'un macerası devam edecek.</p>
+  <p style="margin-top:0.3rem;">Sayıların Gölgesinde tamamlandı.</p>
 </footer>
 
 <!-- ============================================
